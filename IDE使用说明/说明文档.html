@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>说明文档.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="flythings-开发文档简化版">FlyThings 开发文档（简化版）</h1>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="#%E5%85%B3%E4%BA%8E%E6%88%91%E4%BB%AC">关于我们</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a>
+<ul>
+<li>安装环境</li>
+<li>初次使用</li>
+<li>界面概览</li>
+</ul>
+</li>
+<li><a href="#%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B">开发流程</a>
+<ul>
+<li>新建项目</li>
+<li>项目结构</li>
+<li>编译项目</li>
+<li>新建UI文件</li>
+<li>运行项目</li>
+<li>UI文件与生成代码</li>
+<li>开发工具常用技巧</li>
+<li>导入项目</li>
+</ul>
+</li>
+<li><a href="#manifest">Manifest</a>
+<ul>
+<li>Manifest 介绍</li>
+<li>切换平台</li>
+<li>添加依赖包</li>
+<li>添加本地库</li>
+<li>制作静态库或动态库</li>
+</ul>
+</li>
+<li><a href="#%E7%95%8C%E9%9D%A2%E4%BA%A4%E4%BA%92">界面交互</a>
+<ul>
+<li>启动界面</li>
+<li>打开/关闭界面</li>
+<li>界面活动周期</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9A%E6%97%B6%E5%99%A8">定时器</a></li>
+<li><a href="#%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF">串口通讯</a>
+<ul>
+<li>Linux串口编程</li>
+<li>简介 / 通讯框架讲解</li>
+<li>串口配置 / 多串口配置</li>
+</ul>
+</li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E6%8E%A7%E5%88%B6">网络控制</a>
+<ul>
+<li>Wi-Fi设置 / 热点设置</li>
+</ul>
+</li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C">系统操作</a>
+<ul>
+<li>数据存储 / 系统时间 / TF卡/U盘 / 插拔TF卡监听</li>
+<li>GPIO操作 / SPI操作 / 重启系统 / 内存和CPU信息</li>
+</ul>
+</li>
+<li><a href="#%E5%8D%87%E7%BA%A7%E4%B8%8E%E8%B0%83%E8%AF%95">升级与调试</a>
+<ul>
+<li>ADB调试 / 查看日志 / TF卡启动</li>
+<li>制作升级镜像 / 自动升级 / 远程升级 / 批量升级</li>
+</ul>
+</li>
+<li><a href="#%E9%99%84%E5%BD%95">附录</a>
+<ul>
+<li>常见问题 / 安装ADB驱动</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="关于我们">关于我们</h1>
+<h2 id="目标">目标</h2>
+<p>让开发更加简单，高效；让普通用户拥有更便易的客制化开发方案。</p>
+<h2 id="价值">价值</h2>
+<ul>
+<li>专业：用专业的技术铸造专业的产品</li>
+<li>创新：不断的开拓创新为客户提供源源不断的价值</li>
+<li>责任：用技术改变生活</li>
+</ul>
+<hr>
+<h1 id="安装">安装</h1>
+<h2 id="安装环境">安装环境</h2>
+<h3 id="flythings-ide">FlyThings IDE</h3>
+<p><a href="https://download.s21i.co99.net/14731609/0/0/ABUIABBPGAAglMLczgYo0Mjk3AU.zip?f=flythings-ide-win32-win32-x86-zkswe-setup.zip&v=1775706403"><strong>FlyThings IDE</strong></a>（20260403）</p>
+<h3 id="linux-版本工具链">Linux 版本工具链</h3>
+<p>适用平台 <code>SSD</code>、<code>Z20</code>、<code>Z21</code>、<code>Z261</code>：</p>
+<ul>
+<li><a href="https://download.flythings.cn/toolchain/ssd.tar.gz">ssd.tar.gz</a></li>
+</ul>
+<hr>
+<h2 id="初次使用">初次使用</h2>
+<p>安装完成后，在桌面找到 <img src="resources/ide/quick_link.png" alt="ZKSW-Editor快捷方式"> 快捷方式，双击运行。<br>
+也可以在安装目录的 <code>bin</code> 文件夹下找到 <img src="resources/ide/ide.png" alt="ide"> 直接运行。</p>
+<h3 id="选择工作空间">选择工作空间</h3>
+<p>启动后会弹出工作空间选择界面。<strong>工作空间</strong>用于存储相关设置及历史记录，可同时管理多个项目。</p>
+<p><img src="resources/ide/select_workspace.png" alt="选择工作空间"></p>
+<h3 id="欢迎界面">欢迎界面</h3>
+<p>第一次打开或选择新工作空间后，会显示欢迎界面，提供两个快捷功能：</p>
+<ul>
+<li><strong>新建项目</strong>：逐步引导新建 FlyThings 项目</li>
+<li><strong>导入项目</strong>：将现有项目导入当前工作空间继续开发</li>
+</ul>
+<p><img src="resources/ide/welcome.png" alt="欢迎界面"></p>
+<hr>
+<h2 id="界面概览">界面概览</h2>
+<h3 id="项目资源管理器">项目资源管理器</h3>
+<p>将项目文件夹内的资源文件、代码文件等以树形图的形式显示。可自由展开/收起，双击文件可直接打开编辑。</p>
+<p><img src="resources/ide/project_open_collapsed.gif" alt="项目展开/收起"></p>
+<h3 id="控制台">控制台</h3>
+<p>编译代码时，这个位置将输出编译日志。如果编译失败，双击<strong>错误提示内容</strong>，可直接跳转到对应代码。</p>
+<p><img src="resources/ide/usage_console.gif" alt="演示双击错误提示内容直接跳转代码"></p>
+<hr>
+<h1 id="开发流程">开发流程</h1>
+<h2 id="新建项目">新建项目</h2>
+<ol>
+<li>
+<p>在编辑器顶部的菜单栏中，依次选择 <strong>文件 -&gt; 新建 -&gt; FlyThings项目</strong>。</p>
+<p><img src="resources/ide/new_flythings_project.gif" alt="新建项目"></p>
+</li>
+<li>
+<p>上一步选择完成后，将弹出 <strong>FlyThings创建向导</strong> 提示框。</p>
+<p><img src="resources/ide/wizard_new_project_page1.png" alt="创建向导第一步"></p>
+<p>按要求填写新建项目相关的参数。</p>
+<ul>
+<li><strong>平台类型</strong>：根据购买的串口屏选择相应的平台。</li>
+</ul>
+</li>
+<li>
+<p>点击下一步之后，我们将看到更多的参数定义。</p>
+<p><img src="resources/ide/wizard_new_project_page2.png" alt="新建参数"></p>
+<ul>
+<li><strong>屏保超时时间</strong>：如果在指定时间内没有任何触摸操作，系统将自动进入屏保。时间为 <strong>-1</strong> 秒表示禁止屏保。</li>
+<li><strong>串口</strong>：指定通讯串口，一般不需要修改。</li>
+<li><strong>波特率</strong>：指定通讯串口的波特率。</li>
+<li><strong>分辨率</strong>：以像素为单位，指定屏幕的宽高。</li>
+<li><strong>屏幕旋转</strong>：针对坐标轴方向不同的屏幕，可勾选此项将显示内容旋转90°。</li>
+<li><strong>字体</strong>：支持自定义字体。</li>
+<li><strong>输入法</strong>：如果需要输入中文，必须勾选，配合编辑输入框控件使用。</li>
+</ul>
+<p>以上属性后续均可再次修改。</p>
+</li>
+<li>
+<p>继续点击下一步，设置项目名称和保存路径。</p>
+<p><img src="resources/ide/wizard_new_project_page3.png" alt="新建项目第三步"></p>
+<ul>
+<li><strong>项目名</strong>：字母、数字的组合，不能出现中文及空格。</li>
+<li><strong>位置</strong>：项目存储路径，不推荐路径中出现中文。</li>
+</ul>
+<p>填写完成后点击 <strong>完成</strong> 结束创建。</p>
+</li>
+</ol>
+<hr>
+<h2 id="新建ui文件">新建UI文件</h2>
+<ol>
+<li>
+<p>在项目资源管理器中，展开项目，选中 <code>ui</code> 文件夹，右键依次选择 <code>新建</code> -&gt; <code>FlyThings UI 文件</code>。</p>
+<p><img src="resources/ide/new_ftu.gif" alt=""></p>
+</li>
+<li>
+<p>在弹出的向导框中填写以下参数：</p>
+<ul>
+<li><strong>文件名</strong>：以字母、数字命名，后缀为 <code>ftu</code>。</li>
+<li><strong>分辨率</strong>：控制UI界面的宽高，以像素为单位。</li>
+<li><strong>窗口类型</strong>：一般选择 <code>普通</code>，其他类型（状态栏、导航栏、屏保）属于系统界面。</li>
+</ul>
+<p><img src="resources/ide/wizard_new_ftu.png" alt="新建UI文件向导"></p>
+<p>确认参数后点击 <strong>完成</strong>，新建的UI文件将出现在项目的 <code>ui</code> 文件夹下。</p>
+</li>
+</ol>
+<hr>
+<h2 id="项目结构">项目结构</h2>
+<p><img src="resources/project_structure.png" alt="项目结构"></p>
+<p>默认的项目，通常有 <code>src</code>、<code>resources</code>、<code>ui</code> 三个文件夹及一个 <code>Manifest.xml</code> 文件。</p>
+<h3 id="ui-文件夹">ui 文件夹</h3>
+<p><img src="resources/project_ui_expand.png" alt="ui文件夹展开"></p>
+<p>展开 <code>ui</code> 文件夹，可以看到默认创建的 <code>main.ftu</code> 文件。<code>ftu</code> 是UI文件的后缀名，每一个 <code>ftu</code> 文件对应一个应用界面。</p>
+<h3 id="resources-文件夹">resources 文件夹</h3>
+<p>该文件夹的所有内容会随程序一起打包，主要用来存放图片等资源文件。</p>
+<p>在代码中可以获取 <code>resources</code> 目录下某个文件的绝对路径：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;manager/ConfigManager.h&gt;</span></span>
+
+std::string test_txt_path = CONFIGMANAGER-&gt;<span class="hljs-built_in">getResFilePath</span>(<span class="hljs-string">&quot;test.txt&quot;</span>);
+std::string back_png_path = CONFIGMANAGER-&gt;<span class="hljs-built_in">getResFilePath</span>(<span class="hljs-string">&quot;sub/back.png&quot;</span>);
+</div></code></pre>
+<h3 id="src-文件夹">src 文件夹</h3>
+<p>主要存放源码文件。</p>
+<p><img src="resources/project_jni_expand.png" alt=""></p>
+<p>通常包含 <code>activity</code>、<code>logic</code>、<code>uart</code>、<code>Main.cpp</code>。</p>
+<h4 id="activity-文件夹">activity 文件夹</h4>
+<p>自动生成的目录，每一个UI文件编译后会生成对应的 <code>Activity</code> 类文件。</p>
+<blockquote>
+<p><strong>⚠️ 注意</strong>：不要手动修改 <code>activity</code> 文件夹下自动生成的代码。</p>
+</blockquote>
+<h4 id="logic-文件夹">logic 文件夹</h4>
+<p>每一个UI文件编译后都会生成对应前缀名的 <code>Logic.cc</code> 文件，界面的事件与控制逻辑写在这里。</p>
+<h4 id="uart-文件夹">uart 文件夹</h4>
+<p>存放串口操作相关的代码，包括读写串口、协议解析等。</p>
+<h4 id="maincpp">Main.cpp</h4>
+<p>整个应用的入口代码，包括选择开机界面及初始化。</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;entry/EasyUIContext.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;uart/UartContext.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;manager/ConfigManager.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> __cplusplus</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> {
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onEasyUIInit</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    UARTCONTEXT-&gt;<span class="hljs-built_in">openUart</span>(CONFIGMANAGER-&gt;<span class="hljs-built_in">getUartName</span>().<span class="hljs-built_in">c_str</span>(), CONFIGMANAGER-&gt;<span class="hljs-built_in">getUartBaudRate</span>());
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onEasyUIDeinit</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    UARTCONTEXT-&gt;<span class="hljs-built_in">closeUart</span>();
+}
+
+<span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-title">onStartupApp</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;mainActivity&quot;</span>;
+}
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> __cplusplus</span>
+}
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</div></code></pre>
+<h3 id="manifest-文件">Manifest 文件</h3>
+<p>项目的清单文件，可用于更改平台、增删依赖包等。详见 <a href="#manifest">Manifest 章节</a>。</p>
+<hr>
+<h2 id="ui文件与生成代码">UI文件与生成代码</h2>
+<p>FlyThings 将UI与代码区分开来，方便管理。编译前，工具会根据UI文件生成同名前缀的 <code>Logic.cc</code> 文件（增量修改，不会完全覆盖）。工具遍历每个UI文件，为其中的控件声明对应的指针变量，定义在同名前缀的 <code>Activity.cpp</code> 中。</p>
+<p><img src="resources/global_control_pointer.png" alt=""></p>
+<p>图中可以看到，所有指针为静态全局变量，并且 <code>mainActivity.cpp</code> 中包含了 <code>#include &quot;logic/mainLogic.cc&quot;</code> 语句，因此在 <code>mainLogic.cc</code> 中可以直接使用这些控件指针。</p>
+<h3 id="logiccc-中自动生成的函数">Logic.cc 中自动生成的函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REGISTER_ACTIVITY_TIMER_TAB[]</code></td>
+<td>用于注册定时器，填写定时器 id 和时间间隔（毫秒）</td>
+</tr>
+<tr>
+<td><code>onUI_init()</code></td>
+<td>界面初始化时调用，对应 <code>onCreate()</code></td>
+</tr>
+<tr>
+<td><code>onUI_intent()</code></td>
+<td>切换到该界面时触发</td>
+</tr>
+<tr>
+<td><code>onUI_show()</code></td>
+<td>界面显示时触发</td>
+</tr>
+<tr>
+<td><code>onUI_hide()</code></td>
+<td>界面隐藏时触发</td>
+</tr>
+<tr>
+<td><code>onUI_quit()</code></td>
+<td>界面退出时调用，对应析构函数</td>
+</tr>
+<tr>
+<td><code>onProtocolDataUpdate()</code></td>
+<td>串口数据回调，收到解析后的数据帧时触发</td>
+</tr>
+<tr>
+<td><code>onUI_Timer(int id)</code></td>
+<td>定时器回调，返回 <code>true</code> 继续运行，<code>false</code> 停止</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="编译项目">编译项目</h2>
+<p>有三个地方可以编译。</p>
+<h3 id="从项目资源管理器编译">从项目资源管理器编译</h3>
+<p>在项目资源管理器中，右键点击项目名，在弹出菜单中选择 <code>编译FlyThings</code> 即可。</p>
+<p><img src="resources/compile_from_context_menu.gif" alt="从上下文菜单选择编译"></p>
+<h3 id="从工具栏编译">从工具栏编译</h3>
+<p>左键选中项目名，再点击工具栏上的 <img src="resources/compile_from_toolbar.png" alt=""> 绿色三角按钮即可编译。</p>
+<h3 id="编译快捷键">编译快捷键</h3>
+<p>快捷键 <code>Ctrl + Alt + Z</code>，推荐使用此方式。</p>
+<h3 id="清理项目">清理项目</h3>
+<p>编译时会自动创建 <code>Release</code> 文件夹存放临时文件，可随意删除。也可右键项目名选择 <code>清空项目</code> 来清理缓存文件。</p>
+<p><img src="resources/delete_folder.gif" alt="自动删除文件夹"></p>
+<h3 id="重新编译">重新编译</h3>
+<p>先清理项目，再重新编译即可完全重建。</p>
+<hr>
+<h2 id="运行项目">运行项目</h2>
+<p>项目编译后，可通过以下几种方式放到真机运行：</p>
+<h3 id="使用-wi-fi-连接设备快速运行">使用 Wi-Fi 连接设备快速运行</h3>
+<p>仅支持带 Wi-Fi 的机型。</p>
+<ol>
+<li>进入设备的 Wi-Fi 设置界面，将设备连接到与电脑相同的无线网络。</li>
+<li>连接成功后，查看设备 IP 地址。</li>
+<li>在开发工具菜单栏依次选择 <strong>调试配置</strong> -&gt; <strong>ADB配置</strong>，ADB 连接方式选择 <strong>WIFI</strong>，填入设备 IP，选择下载目录后保存。</li>
+<li>选择 <strong>下载调试</strong> 菜单项，将项目代码同步到设备运行。</li>
+</ol>
+<h3 id="使用-usb-连接设备快速运行">使用 USB 连接设备快速运行</h3>
+<p>适用于不带 Wi-Fi 的机型。<strong>注意：带 Wi-Fi 的机型 USB 连接无效。</strong></p>
+<ol>
+<li>用 USB 线连接设备与电脑，若提示驱动问题可参考安装 ADB 驱动。</li>
+<li>在菜单栏依次选择 <strong>调试配置</strong> -&gt; <strong>ADB配置</strong>，ADB 连接方式选择 <strong>USB</strong>，选择下载目录后保存。</li>
+<li>选择 <strong>下载调试</strong> 菜单项，将项目代码同步到设备运行。</li>
+</ol>
+<h3 id="借助-tf-卡启动">借助 TF 卡启动</h3>
+<p>如果 USB 和 Wi-Fi 都不可用，可借助 TF 卡启动程序，具体步骤参考 <a href="#%E5%8D%87%E7%BA%A7%E4%B8%8E%E8%B0%83%E8%AF%95">从TF卡启动程序</a>。</p>
+<hr>
+<h2 id="开发工具常用技巧">开发工具常用技巧</h2>
+<h3 id="快速跳转至关联函数">快速跳转至关联函数</h3>
+<p>在预览图上选中一个控件，右键选择 <strong>跳转到相关代码</strong>，即可打开对应的 Logic.cc 文件并定位到关联函数。</p>
+<p><img src="resources/ide/jump_to_source.png" alt=""></p>
+<h3 id="修改字体字体大小">修改字体/字体大小</h3>
+<p>在菜单栏选择 <strong>窗口</strong> -&gt; <strong>首选项</strong>，在弹出框中进行字体设置。</p>
+<p><img src="resources/ide/preference.png" alt="">
+<img src="resources/ide/set_font.png" alt=""></p>
+<h3 id="代码智能补全">代码智能补全</h3>
+<p>编辑代码时输入起始部分，按 <strong>Alt + /</strong> 打开代码补全。</p>
+<p><img src="resources/ide/intelisence.png" alt=""></p>
+<h3 id="重建索引">重建索引</h3>
+<p>如果代码补全失效或编辑器提示错误但编译正常，请尝试重建索引。</p>
+<p><img src="resources/ide/rebuild_index.gif" alt=""></p>
+<hr>
+<h2 id="导入项目">导入项目</h2>
+<ol>
+<li>在菜单栏依次选择 <strong>文件</strong> -&gt; <strong>导入</strong>。</li>
+<li>在弹出框中依次选择 <strong>常规</strong> -&gt; <strong>现有项目到工作空间中</strong>，点击 <strong>下一步</strong>。</li>
+<li>点击 <strong>浏览</strong> 按钮，指定需要导入项目的文件夹，点击 <strong>确定</strong>。</li>
+<li>确认识别出的项目后，点击 <strong>完成</strong>，项目将出现在项目资源管理器中。</li>
+</ol>
+<p><img src="resources/ide/import_project.gif" alt=""></p>
+<hr>
+<h1 id="manifest">Manifest</h1>
+<h2 id="manifest-介绍">Manifest 介绍</h2>
+<p><code>Manifest.xml</code> 是重要的配置文件，通过编辑此文件可以配置项目平台、管理依赖包以及实现更多功能。</p>
+<p>双击 <code>Manifest.xml</code> 即可编辑。</p>
+<p><img src="resources/manifest.png" alt=""></p>
+<hr>
+<h2 id="切换平台">切换平台</h2>
+<p>双击 <code>Manifest.xml</code>，在项目平台下拉框中直接切换平台，更改后按 <code>Ctrl+S</code> 保存。</p>
+<p><img src="resources/ide/switch_platform.png" alt=""></p>
+<p>开发工具会根据当前平台生成对应的宏定义，代码中可通过宏定义判断当前平台：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">if</span> __PLATFORM_Z6S__</span>
+<span class="hljs-comment">// Z6S平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_Z21__</span>
+<span class="hljs-comment">// Z21平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_Z20__</span>
+<span class="hljs-comment">// Z20平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_Z261__</span>
+<span class="hljs-comment">// Z261平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_T113__</span>
+<span class="hljs-comment">// T113平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_T113EMMC__</span>
+<span class="hljs-comment">// T113EMMC平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> __PLATFORM_V85X__</span>
+<span class="hljs-comment">// V85X平台</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</div></code></pre>
+<p>当项目需要在多个平台运行时，建议根据宏进行条件编译，只需维护一份代码。</p>
+<hr>
+<h2 id="添加依赖包">添加依赖包</h2>
+<p>双击 <code>Manifest.xml</code> 开始修改配置。</p>
+<p>我们把代码编译为静态/动态链接库后，连同头文件一起打包并赋予版本号上传到服务器，称为 <code>依赖包</code>。可访问 <a href="https://package.flythings.cn/" target="_blank">依赖包仓库</a> 浏览已有依赖包。</p>
+<p>点击 <code>添加</code>，在弹出框中输入包名称和版本号，点击确定后按 <code>Ctrl+S</code> 保存。</p>
+<p><img src="resources/ide/add_pkg.png" alt=""></p>
+<p>建议在依赖包仓库中点击 <code>复制</code>，再在输入框中 <code>Ctrl+V</code> 粘贴，可自动填充包名和版本号。</p>
+<p><img src="resources/base_pkg.png" alt=""></p>
+<blockquote>
+<p><strong>⚠️ 重要</strong>：添加完成后，记得点击菜单 <code>更新依赖</code> 完成更新。</p>
+</blockquote>
+<p><img src="resources/ide/update_dep.png" alt=""></p>
+<p>更新成功后，项目 <code>Include</code> 里会出现依赖包的头文件，即可在代码中引用：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;base/base.h&gt;</span></span>
+</div></code></pre>
+<p><img src="resources/ide/add_pkg_ok.png" alt=""></p>
+<hr>
+<h2 id="添加本地库">添加本地库</h2>
+<p>如果是私有的静态/动态链接库，可将库文件放到约定文件夹下，编译时将自动链接。</p>
+<ol>
+<li>
+<p>在项目 <code>src</code> 文件夹内新建 <code>dependencies</code> 文件夹。</p>
+</li>
+<li>
+<p>在 <code>dependencies</code> 内新建 <code>include</code> 文件夹（编译时作为头文件搜索目录）。</p>
+</li>
+<li>
+<p>在 <code>dependencies</code> 内新建 <code>lib</code> 文件夹（编译时自动链接其中所有静态库及动态库）。</p>
+<ul>
+<li>如存在 <code>dependencies/lib-no-link</code> 文件夹，其中的动态库仅随程序打包，不参与编译。</li>
+<li>库文件名必须以 <code>lib</code> 开头，静态库后缀 <code>.a</code>，动态库后缀 <code>.so</code>，否则将被忽略。</li>
+</ul>
+</li>
+<li>
+<p>将头文件复制到 <code>include</code> 文件夹，库文件复制到 <code>lib</code> 文件夹，目录结构如下：</p>
+<p><img src="resources/local_dependencies.png" alt=""></p>
+</li>
+<li>
+<p>右键项目名，在上下文菜单中选择 <code>更新依赖</code>，再次编译后依赖生效。</p>
+</li>
+<li>
+<p>在代码中引用：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;foo.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;abc.h&quot;</span></span>
+</div></code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="制作静态库或动态库">制作静态库或动态库</h2>
+<p>双击打开 <code>Manifest.xml</code>，切换到 <code>源文件</code> 视角，按规则添加 <code>target</code> 标签即可制作静态或动态链接库。</p>
+<p><img src="resources/ide/manifest_source_tab.png" alt=""></p>
+<pre class="hljs"><code><div><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span>
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">xml</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">manifest</span> <span class="hljs-attr">platform</span>=<span class="hljs-string">&quot;Z21&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">targets</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- 生成 libfoo1.a 静态链接库 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">target</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;foo1&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;staticLibrary&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">filter</span>=<span class="hljs-string">&quot;src/foo/hello.h&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">filter</span>=<span class="hljs-string">&quot;src/foo/hello.cpp&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span>
+
+        <span class="hljs-comment">&lt;!-- 生成 libfoo2.so 动态链接库 --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">target</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;foo2&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;sharedLibrary&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">filter</span>=<span class="hljs-string">&quot;src/foo/hello.h&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">filter</span>=<span class="hljs-string">&quot;src/foo/hello.cpp&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">targets</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span>
+</div></code></pre>
+<ul>
+<li><code>id</code>：库名称；<code>type</code>：<code>staticLibrary</code>（静态库）或 <code>sharedLibrary</code>（动态库）</li>
+<li><code>header</code>：指定随库提供的头文件，<code>filter</code> 支持通配符</li>
+<li><code>source</code>：指定需要编译成库的源文件，<code>filter</code> 支持通配符</li>
+</ul>
+<p>编译后，库文件将生成到 <code>Release</code> 目录下。</p>
+<p><img src="resources/manifest_target.png" alt=""></p>
+<hr>
+<h1 id="界面交互">界面交互</h1>
+<h2 id="启动界面">启动界面</h2>
+<p>新建项目时生成的 <code>Main.cpp</code> 中，<code>onStartupApp()</code> 函数返回值决定了启动界面：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-title">onStartupApp</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;mainActivity&quot;</span>;  <span class="hljs-comment">// 对应 main.ftu</span>
+}
+</div></code></pre>
+<h2 id="打开关闭界面">打开/关闭界面</h2>
+<h3 id="打开界面">打开界面</h3>
+<pre class="hljs"><code><div>EASYUICONTEXT-&gt;<span class="hljs-built_in">openActivity</span>(<span class="hljs-string">&quot;subActivity&quot;</span>);
+</div></code></pre>
+<p>如需传递参数：</p>
+<pre class="hljs"><code><div>Intent *pIntent = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Intent</span>();
+pIntent-&gt;<span class="hljs-built_in">putExtra</span>(<span class="hljs-string">&quot;cmd&quot;</span>, <span class="hljs-string">&quot;open&quot;</span>);
+pIntent-&gt;<span class="hljs-built_in">putExtra</span>(<span class="hljs-string">&quot;value&quot;</span>, <span class="hljs-string">&quot;ok&quot;</span>);
+EASYUICONTEXT-&gt;<span class="hljs-built_in">openActivity</span>(<span class="hljs-string">&quot;subActivity&quot;</span>, pIntent);
+</div></code></pre>
+<p>在目标界面的 <code>onUI_intent</code> 中接收：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">onUI_intent</span><span class="hljs-params">(<span class="hljs-type">const</span> Intent *intentPtr)</span> </span>{
+    <span class="hljs-keyword">if</span> (intentPtr) {
+        std::string cmd = intentPtr-&gt;<span class="hljs-built_in">getExtra</span>(<span class="hljs-string">&quot;cmd&quot;</span>);   <span class="hljs-comment">// &quot;open&quot;</span>
+        std::string value = intentPtr-&gt;<span class="hljs-built_in">getExtra</span>(<span class="hljs-string">&quot;value&quot;</span>); <span class="hljs-comment">// &quot;ok&quot;</span>
+    }
+}
+</div></code></pre>
+<blockquote>
+<p>new 出来的 Intent 不需要手动 delete，由框架内部自动释放。</p>
+</blockquote>
+<h3 id="关闭界面">关闭界面</h3>
+<pre class="hljs"><code><div>EASYUICONTEXT-&gt;<span class="hljs-built_in">goBack</span>();       <span class="hljs-comment">// 返回上一级界面</span>
+EASYUICONTEXT-&gt;<span class="hljs-built_in">goHome</span>();       <span class="hljs-comment">// 直接回退到启动界面</span>
+EASYUICONTEXT-&gt;<span class="hljs-built_in">closeActivity</span>(<span class="hljs-string">&quot;subActivity&quot;</span>); <span class="hljs-comment">// 关闭指定界面（不能关闭启动界面）</span>
+</div></code></pre>
+<p>也可以将按钮 ID 设置为 <code>sys_back</code> 或 <code>sys_home</code>，系统会自动响应对应功能。</p>
+<hr>
+<h2 id="界面活动周期">界面活动周期</h2>
+<p>界面之间形成<strong>栈</strong>结构，后打开的界面在层级上层。</p>
+<h3 id="打开界面时的流程">打开界面时的流程</h3>
+<ul>
+<li>若界面栈中<strong>不存在</strong>该界面：依次触发 <code>onUI_init</code> → <code>onUI_intent</code> → <code>onUI_show</code></li>
+<li>若界面栈中<strong>已存在</strong>该界面：仅将其移至顶层，不触发 <code>onUI_init</code></li>
+</ul>
+<h3 id="关闭界面时的流程">关闭界面时的流程</h3>
+<ul>
+<li><code>goBack()</code>：弹出顶层界面，触发 <code>onUI_quit</code>，然后触发下一层的 <code>onUI_show</code></li>
+<li><code>goHome()</code>：直接回退到启动界面，弹出其他所有界面</li>
+<li><code>closeActivity(&quot;xxx&quot;)</code>：移除指定界面；若移除的不是顶层界面，下一层不触发 <code>onUI_show</code></li>
+</ul>
+<blockquote>
+<p>如果界面打开时申请了资源，记得在 <code>onUI_quit</code> 中释放。</p>
+</blockquote>
+<hr>
+<h1 id="定时器">定时器</h1>
+<h2 id="定时器-1">定时器</h2>
+<p>定时器适用于需要定时执行操作的场景，例如定时发送心跳包、定时查询数据刷新界面、轮询任务等。</p>
+<h3 id="注册定时器">注册定时器</h3>
+<p>在 <code>Logic.cc</code> 的定时器数组中添加结构体即可注册：</p>
+<pre class="hljs"><code><div><span class="hljs-type">static</span> S_ACTIVITY_TIMEER REGISTER_ACTIVITY_TIMER_TAB[] = {
+    {<span class="hljs-number">0</span>, <span class="hljs-number">6000</span>},  <span class="hljs-comment">// 定时器id=0，时间间隔6秒</span>
+    {<span class="hljs-number">1</span>, <span class="hljs-number">1000</span>},  <span class="hljs-comment">// 定时器id=1，时间间隔1秒</span>
+};
+</div></code></pre>
+<p>结构体定义：</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> {
+    <span class="hljs-type">int</span> id;   <span class="hljs-comment">// 定时器ID，不能重复</span>
+    <span class="hljs-type">int</span> time; <span class="hljs-comment">// 时间间隔，单位：毫秒</span>
+} S_ACTIVITY_TIMEER;
+</div></code></pre>
+<h3 id="定时器回调">定时器回调</h3>
+<p>定时器触发时，系统调用对应 <code>Logic.cc</code> 中的 <code>onUI_Timer(int id)</code>：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">onUI_Timer</span><span class="hljs-params">(<span class="hljs-type">int</span> id)</span> </span>{
+    <span class="hljs-keyword">switch</span> (id) {
+        <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+            <span class="hljs-comment">// id=0 的定时器逻辑</span>
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+            <span class="hljs-comment">// id=1 的定时器逻辑</span>
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">break</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;  <span class="hljs-comment">// 返回 true 继续运行，false 停止</span>
+}
+</div></code></pre>
+<blockquote>
+<p><strong>📌 注意</strong></p>
+<ul>
+<li>每个界面的定时器独立，不同界面的定时器 id 可以相同</li>
+<li>界面未销毁时定时器持续运行，界面销毁后自动停止</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="手动注册停止定时器">手动注册/停止定时器</h2>
+<p><code>REGISTER_ACTIVITY_TIMER_TAB</code> 方式不够灵活，Activity 类提供了以下三个方法用于动态控制定时器：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">registerUserTimer</span><span class="hljs-params">(<span class="hljs-type">int</span> id, <span class="hljs-type">int</span> time)</span></span>;   <span class="hljs-comment">// 注册定时器</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unregisterUserTimer</span><span class="hljs-params">(<span class="hljs-type">int</span> id)</span></span>;            <span class="hljs-comment">// 取消定时器</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">resetUserTimer</span><span class="hljs-params">(<span class="hljs-type">int</span> id, <span class="hljs-type">int</span> time)</span></span>;       <span class="hljs-comment">// 重置定时器</span>
+</div></code></pre>
+<p>使用示例：</p>
+<pre class="hljs"><code><div><span class="hljs-type">static</span> <span class="hljs-type">bool</span> isRegistered = <span class="hljs-literal">false</span>;
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> TIMER_HANDLE 2</span>
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">onButtonClick_ButtonTimerOn</span><span class="hljs-params">(ZKButton *pButton)</span> </span>{
+    <span class="hljs-keyword">if</span> (!isRegistered) {
+        mActivityPtr-&gt;<span class="hljs-built_in">registerUserTimer</span>(TIMER_HANDLE, <span class="hljs-number">500</span>);
+        isRegistered = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">onButtonClick_ButtonTimerOff</span><span class="hljs-params">(ZKButton *pButton)</span> </span>{
+    <span class="hljs-keyword">if</span> (isRegistered) {
+        mActivityPtr-&gt;<span class="hljs-built_in">unregisterUserTimer</span>(TIMER_HANDLE);
+        isRegistered = <span class="hljs-literal">false</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</div></code></pre>
+<blockquote>
+<p><strong>⚠️ 重要</strong>：<code>registerUserTimer</code>、<code>unregisterUserTimer</code>、<code>resetUserTimer</code> 三个函数<strong>不能</strong>在 <code>onUI_Timer</code> 中调用，会造成死锁。</p>
+</blockquote>
+<hr>
+<h1 id="串口通讯">串口通讯</h1>
+<h2 id="linux串口编程">Linux串口编程</h2>
+<blockquote>
+<p><strong>本篇旨在帮助理解 FlyThings 项目串口部分代码从零到有的过程，从而更容易理解最终提供的串口代码流程。</strong></p>
+</blockquote>
+<p>该产品基于 Linux 系统，可完全沿用标准 Linux 编程来操作串口，分为以下5个步骤：</p>
+<h3 id="1-打开串口">1. 打开串口</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span>
+
+<span class="hljs-type">int</span> fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/dev/ttyS0&quot;</span>, O_RDWR | O_NOCTTY);
+</div></code></pre>
+<p><code>/dev/ttyS0</code> 类似 Windows 上的 <code>COM1</code>，打开成功返回非负的串口描述符，失败返回负数。</p>
+<h3 id="2-配置串口">2. 配置串口</h3>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">openUart</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/dev/ttyS0&quot;</span>, O_RDWR | O_NOCTTY);
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">termios</span> oldtio = { <span class="hljs-number">0</span> };
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">termios</span> newtio = { <span class="hljs-number">0</span> };
+    <span class="hljs-built_in">tcgetattr</span>(fd, &amp;oldtio);
+    newtio.c_cflag = B115200 | CS8 | CLOCAL | CREAD;
+    newtio.c_iflag = <span class="hljs-number">0</span>;
+    newtio.c_oflag = <span class="hljs-number">0</span>;
+    newtio.c_lflag = <span class="hljs-number">0</span>;
+    newtio.c_cc[VTIME] = <span class="hljs-number">0</span>;
+    newtio.c_cc[VMIN] = <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">tcflush</span>(fd, TCIOFLUSH);
+    <span class="hljs-built_in">tcsetattr</span>(fd, TCSANOW, &amp;newtio);
+    <span class="hljs-built_in">fcntl</span>(fd, F_SETFL, O_NONBLOCK);
+    <span class="hljs-keyword">return</span> fd;
+}
+</div></code></pre>
+<blockquote>
+<p><strong>注意</strong>：以上为默认配置（8数据位、1停止位、无校验），非特殊需求请勿修改。</p>
+</blockquote>
+<h3 id="3-读串口">3. 读串口</h3>
+<pre class="hljs"><code><div><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> buffer[<span class="hljs-number">1024</span>] = {<span class="hljs-number">0</span>};
+<span class="hljs-type">int</span> ret = <span class="hljs-built_in">read</span>(fd, buffer, <span class="hljs-built_in">sizeof</span>(buffer));
+</div></code></pre>
+<p>返回值 &gt; 0 表示读取到数据，返回字节数；≤ 0 表示错误或暂无数据。</p>
+<blockquote>
+<p><strong>注意</strong>：<code>read</code> 不保证一次读完所有数据，需要多次调用才能保证数据完整。</p>
+</blockquote>
+<h3 id="4-发送串口">4. 发送串口</h3>
+<pre class="hljs"><code><div><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> buffer[<span class="hljs-number">4</span>] = {<span class="hljs-number">0x01</span>, <span class="hljs-number">0x02</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x04</span>};
+<span class="hljs-type">int</span> ret = <span class="hljs-built_in">write</span>(fd, buffer, <span class="hljs-built_in">sizeof</span>(buffer));
+</div></code></pre>
+<p>返回值等于第三个参数值表示发送成功，否则表示异常。</p>
+<h3 id="5-关闭串口">5. 关闭串口</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">close</span>(fd);
+</div></code></pre>
+<hr>
+<h2 id="串口简介">串口简介</h2>
+<p>屏和 MCU 之间通过串口进行通信，双方约定好协议即可交互。与传统串口屏作为从机不同，FlyThings 屏具有逻辑处理能力，作为主机端。</p>
+<p>新建工程时工具会自动生成串口通讯代码，并提供协议数据与界面交互的回调接口，开发人员只需关注数据在 UI 上的展示，通讯部分由框架自动完成。协议解析部分需根据实际通讯协议做相应修改。</p>
+<hr>
+<h2 id="通讯框架讲解">通讯框架讲解</h2>
+<h3 id="代码框架">代码框架</h3>
+<p>软件 APP 分为两层：</p>
+<p><strong>串口 HAL 层</strong></p>
+<ul>
+<li><code>UartContext</code>：串口实体控制层，提供串口开关、发送、接收接口</li>
+<li><code>ProtocolData</code>：定义通讯数据结构体，保存协议解析出的变量</li>
+<li><code>ProtocolSender</code>：完成数据发送封装</li>
+<li><code>ProtocolParser</code>：完成协议解析，将数据存入 <code>ProtocolData</code>，并管理串口数据变化的回调接口</li>
+</ul>
+<p><strong>APP 应用接口层</strong></p>
+<ul>
+<li>通过 <code>ProtocolParser</code> 注册监听获取更新的 <code>ProtocolData</code></li>
+<li>通过 <code>ProtocolSender</code> 向 MCU 发送指令</li>
+</ul>
+<p><code>UartContext</code> 为标准化实现，一般无需修改。</p>
+<h3 id="协议格式">协议格式</h3>
+<p>以常见协议为例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">协议头（2字节）</th>
+<th style="text-align:center">命令（2字节）</th>
+<th style="text-align:center">数据长度（1字节）</th>
+<th style="text-align:center">数据（N字节）</th>
+<th style="text-align:center">校验（1字节，可选）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0xFF55</td>
+<td style="text-align:center">Cmd</td>
+<td style="text-align:center">len</td>
+<td style="text-align:center">data</td>
+<td style="text-align:center">checksum</td>
+</tr>
+</tbody>
+</table>
+<p><code>CommDef.h</code> 中定义帧头和最小包长：</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// 开启checksum校验：#define PRO_SUPPORT_CHECK_SUM</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CMD_HEAD1   0xFF</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CMD_HEAD2   0x55</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> DATA_PACKAGE_MIN_LEN  5  <span class="hljs-comment">// 无校验：2+2+1=5；有校验：+1=6</span></span>
+</div></code></pre>
+<h4 id="修改协议头">修改协议头</h4>
+<pre class="hljs"><code><div><span class="hljs-comment">// 1. 修改帧头定义</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CMD_HEAD1   0xFF</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> CMD_HEAD2   0x55</span>
+
+<span class="hljs-comment">// 2. 帧头长度变化时同步修改判断语句</span>
+<span class="hljs-keyword">while</span> ((mDataBufLen &gt;= <span class="hljs-number">2</span>) &amp;&amp; ((pData[<span class="hljs-number">0</span>] != CMD_HEAD1) || (pData[<span class="hljs-number">1</span>] != CMD_HEAD2)))
+</div></code></pre>
+<h4 id="修改协议长度位置">修改协议长度位置</h4>
+<pre class="hljs"><code><div>dataLen = pData[<span class="hljs-number">4</span>];                        <span class="hljs-comment">// pData[4] 为长度字节，按需修改</span>
+frameLen = dataLen + DATA_PACKAGE_MIN_LEN; <span class="hljs-comment">// 帧长度=数据长度+头尾长度</span>
+</div></code></pre>
+<hr>
+<h2 id="串口配置">串口配置</h2>
+<h3 id="串口号对应关系">串口号对应关系</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">平台</th>
+<th style="text-align:center">软件串口号</th>
+<th style="text-align:center">硬件串口号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Z11系列</td>
+<td style="text-align:center">ttyS0 / ttyS1</td>
+<td style="text-align:center">UART1 / UART2</td>
+</tr>
+<tr>
+<td style="text-align:center">Z6系列</td>
+<td style="text-align:center">ttyS0 / ttyS1 / ttyS2</td>
+<td style="text-align:center">UART0 / UART1 / UART2</td>
+</tr>
+<tr>
+<td style="text-align:center">Z20系列</td>
+<td style="text-align:center">ttyS1 / ttyS2 / ttyS3</td>
+<td style="text-align:center">UART1 / FUART / UART2</td>
+</tr>
+<tr>
+<td style="text-align:center">Z21系列</td>
+<td style="text-align:center">ttyS1 / ttyS2 / ttyS3</td>
+<td style="text-align:center">UART1 / UART2 / UART3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="串口波特率配置">串口波特率配置</h3>
+<p>新建工程时可在向导中配置波特率；也可右键工程选择 <code>Properties</code> 修改。</p>
+<h3 id="串口打开与关闭">串口打开与关闭</h3>
+<p>在 <code>/Main.cpp</code> 中控制：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onEasyUIInit</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    UARTCONTEXT-&gt;<span class="hljs-built_in">openUart</span>(CONFIGMANAGER-&gt;<span class="hljs-built_in">getUartName</span>().<span class="hljs-built_in">c_str</span>(), CONFIGMANAGER-&gt;<span class="hljs-built_in">getUartBaudRate</span>());
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onEasyUIDeinit</span><span class="hljs-params">(EasyUIContext *pContext)</span> </span>{
+    UARTCONTEXT-&gt;<span class="hljs-built_in">closeUart</span>();
+}
+</div></code></pre>
+<hr>
+<h2 id="多串口配置">多串口配置</h2>
+<p>常规项目默认支持一个串口。如需多串口，需修改串口部分代码。</p>
+<p>串口号及波特率在 <code>/uart/UartContext.cpp</code> 的 <code>init()</code> 中配置：</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">UartContext::init</span><span class="hljs-params">()</span> </span>{
+    uart0 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">UartContext</span>(UART_TTYS0);
+    uart0-&gt;<span class="hljs-built_in">openUart</span>(<span class="hljs-string">&quot;/dev/ttyS0&quot;</span>, B9600);
+
+    uart1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">UartContext</span>(UART_TTYS1);
+    uart1-&gt;<span class="hljs-built_in">openUart</span>(<span class="hljs-string">&quot;/dev/ttyS1&quot;</span>, B9600);
+}
+</div></code></pre>
+<p>发送数据到指定串口：</p>
+<pre class="hljs"><code><div><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> buf[<span class="hljs-number">2</span>] = {<span class="hljs-number">1</span>, <span class="hljs-number">1</span>};
+<span class="hljs-built_in">sendProtocolTo</span>(UART_TTYS1, <span class="hljs-number">1</span>, buf, <span class="hljs-number">2</span>); <span class="hljs-comment">// 发送到 ttyS1</span>
+<span class="hljs-built_in">sendProtocolTo</span>(UART_TTYS0, <span class="hljs-number">1</span>, buf, <span class="hljs-number">2</span>); <span class="hljs-comment">// 发送到 ttyS0</span>
+</div></code></pre>
+<p>如需区分数据来源，在 <code>SProtocolData</code> 中添加标识字段：</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// ProtocolData.h</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> {
+    BYTE power;
+    <span class="hljs-type">int</span> uart_from; <span class="hljs-comment">// 来自哪一个串口</span>
+} SProtocolData;
+</div></code></pre>
+<p>在 <code>procParse</code> 中赋值，在 <code>Logic.cc</code> 的 <code>onProtocolDataUpdate</code> 中读取 <code>data.uart_from</code> 判断来源。</p>
+<hr>
+<h1 id="网络控制">网络控制</h1>
+<h2 id="wi-fi-设置">Wi-Fi 设置</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;net/NetManager.h&quot;</span></span>
+</div></code></pre>
+<p>打开系统内置 Wi-Fi 设置界面：</p>
+<pre class="hljs"><code><div>EASYUICONTEXT-&gt;<span class="hljs-built_in">openActivity</span>(<span class="hljs-string">&quot;WifiSettingActivity&quot;</span>);
+</div></code></pre>
+<p>获取 WifiManager：</p>
+<pre class="hljs"><code><div>WifiManager *pWM = NETMANAGER-&gt;<span class="hljs-built_in">getWifiManager</span>();
+<span class="hljs-comment">// 或定义宏方便调用</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> WIFIMANAGER NETMANAGER-&gt;getWifiManager()</span>
+</div></code></pre>
+<p>常用接口：</p>
+<pre class="hljs"><code><div>WIFIMANAGER-&gt;<span class="hljs-built_in">isSupported</span>();        <span class="hljs-comment">// 检测是否支持 Wi-Fi</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">isWifiEnable</span>();       <span class="hljs-comment">// 检测 Wi-Fi 是否开启</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">enableWifi</span>(<span class="hljs-literal">true</span>);     <span class="hljs-comment">// 开关 Wi-Fi</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">startScan</span>();          <span class="hljs-comment">// 扫描 Wi-Fi</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">connect</span>(ssid, pw);    <span class="hljs-comment">// 连接 Wi-Fi</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">disconnect</span>();         <span class="hljs-comment">// 断开连接</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">isConnected</span>();        <span class="hljs-comment">// 是否已连接</span>
+WIFIMANAGER-&gt;<span class="hljs-built_in">getConnectionInfo</span>();  <span class="hljs-comment">// 获取已连接 Wi-Fi 信息</span>
+
+<span class="hljs-comment">// 注册/反注册监听</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">addWifiListener</span><span class="hljs-params">(IWifiListener *pListener)</span></span>;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">removeWifiListener</span><span class="hljs-params">(IWifiListener *pListener)</span></span>;
+</div></code></pre>
+<hr>
+<h2 id="热点设置">热点设置</h2>
+<p>打开系统内置热点设置界面：</p>
+<pre class="hljs"><code><div>EASYUICONTEXT-&gt;<span class="hljs-built_in">openActivity</span>(<span class="hljs-string">&quot;SoftApSettingActivity&quot;</span>);
+</div></code></pre>
+<p>获取 SoftApManager：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;net/NetManager.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> SOFTAPMANAGER NETMANAGER-&gt;getSoftApManager()</span>
+</div></code></pre>
+<p>常用接口：</p>
+<pre class="hljs"><code><div>SOFTAPMANAGER-&gt;<span class="hljs-built_in">setEnable</span>(<span class="hljs-literal">true</span>);             <span class="hljs-comment">// 开关热点</span>
+SOFTAPMANAGER-&gt;<span class="hljs-built_in">isEnable</span>();                  <span class="hljs-comment">// 热点是否开启</span>
+SOFTAPMANAGER-&gt;<span class="hljs-built_in">getSoftApState</span>();            <span class="hljs-comment">// 获取当前热点状态</span>
+SOFTAPMANAGER-&gt;<span class="hljs-built_in">setSsidAndPwd</span>(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;pw&quot;</span>); <span class="hljs-comment">// 修改热点名称和密码</span>
+SOFTAPMANAGER-&gt;<span class="hljs-built_in">getSsid</span>();                   <span class="hljs-comment">// 获取热点名称</span>
+SOFTAPMANAGER-&gt;<span class="hljs-built_in">getPwd</span>();                    <span class="hljs-comment">// 获取热点密码</span>
+
+<span class="hljs-comment">// 热点状态枚举</span>
+<span class="hljs-comment">// E_SOFTAP_DISABLED     关闭状态</span>
+<span class="hljs-comment">// E_SOFTAP_ENABLING     打开中</span>
+<span class="hljs-comment">// E_SOFTAP_ENABLED      打开成功</span>
+<span class="hljs-comment">// E_SOFTAP_DISABLING    关闭中</span>
+<span class="hljs-comment">// E_SOFTAP_ENABLE_ERROR 打开失败</span>
+
+<span class="hljs-comment">// 注册/反注册状态监听</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">addSoftApStateListener</span><span class="hljs-params">(ISoftApStateListener *pListener)</span></span>;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">removeSoftApStateListener</span><span class="hljs-params">(ISoftApStateListener *pListener)</span></span>;
+</div></code></pre>
+<hr>
+<h1 id="系统操作">系统操作</h1>
+<h2 id="数据存储">数据存储</h2>
+<p>以<strong>键值对</strong>方式永久存储少量数据（如账号、密码、配置等），掉电保存。</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;storage/StoragePreferences.h&quot;</span></span>
+</div></code></pre>
+<p>存储接口：</p>
+<pre class="hljs"><code><div>StoragePreferences::<span class="hljs-built_in">putString</span>(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;zhang san&quot;</span>);
+StoragePreferences::<span class="hljs-built_in">putInt</span>(<span class="hljs-string">&quot;age&quot;</span>, <span class="hljs-number">20</span>);
+StoragePreferences::<span class="hljs-built_in">putBool</span>(<span class="hljs-string">&quot;power&quot;</span>, <span class="hljs-literal">true</span>);
+StoragePreferences::<span class="hljs-built_in">putFloat</span>(<span class="hljs-string">&quot;temperature&quot;</span>, <span class="hljs-number">30.12</span>);
+</div></code></pre>
+<p>读取接口（第二个参数为默认值）：</p>
+<pre class="hljs"><code><div>std::string name = StoragePreferences::<span class="hljs-built_in">getString</span>(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;&quot;</span>);
+<span class="hljs-type">int</span> age          = StoragePreferences::<span class="hljs-built_in">getInt</span>(<span class="hljs-string">&quot;age&quot;</span>, <span class="hljs-number">0</span>);
+<span class="hljs-type">bool</span> power       = StoragePreferences::<span class="hljs-built_in">getBool</span>(<span class="hljs-string">&quot;power&quot;</span>, <span class="hljs-literal">false</span>);
+<span class="hljs-type">float</span> temp       = StoragePreferences::<span class="hljs-built_in">getFloat</span>(<span class="hljs-string">&quot;temperature&quot;</span>, <span class="hljs-number">0</span>);
+</div></code></pre>
+<p>删除/清空：</p>
+<pre class="hljs"><code><div>StoragePreferences::<span class="hljs-built_in">remove</span>(<span class="hljs-string">&quot;username&quot;</span>);
+StoragePreferences::<span class="hljs-built_in">clear</span>();
+</div></code></pre>
+<blockquote>
+<p><strong>⚠️ 注意</strong>：数据以文件形式保存在 flash 中，<strong>请勿频繁写入</strong>，以免损坏 flash。该分区大小通常在几百 KB 以内，可通过 <code>adb shell df</code> 查看 <code>data</code> 分区大小。</p>
+</blockquote>
+<hr>
+<h2 id="系统时间">系统时间</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils/TimeHelper.h&quot;</span></span>
+</div></code></pre>
+<p>获取当前时间：</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">struct</span> <span class="hljs-title class_">tm</span> *t = TimeHelper::<span class="hljs-built_in">getDateTime</span>();
+<span class="hljs-comment">// t-&gt;tm_year + 1900 = 实际年份</span>
+<span class="hljs-comment">// t-&gt;tm_mon + 1 = 实际月份</span>
+</div></code></pre>
+<p>设置时间：</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">struct</span> <span class="hljs-title class_">tm</span> t;
+t.tm_year = <span class="hljs-number">2017</span> - <span class="hljs-number">1900</span>;
+t.tm_mon  = <span class="hljs-number">9</span> - <span class="hljs-number">1</span>;
+t.tm_mday = <span class="hljs-number">13</span>;
+t.tm_hour = <span class="hljs-number">16</span>;
+t.tm_min  = <span class="hljs-number">0</span>;
+t.tm_sec  = <span class="hljs-number">0</span>;
+TimeHelper::<span class="hljs-built_in">setDateTime</span>(&amp;t);
+
+<span class="hljs-comment">// 或使用字符串（格式：yyyy-MM-dd HH:mm:ss）</span>
+TimeHelper::<span class="hljs-built_in">setDateTime</span>(<span class="hljs-string">&quot;2017-09-13 16:00:00&quot;</span>);
+</div></code></pre>
+<hr>
+<h2 id="tf卡u盘">TF卡/U盘</h2>
+<p>系统自动挂载路径：</p>
+<ul>
+<li>TF卡：<code>/mnt/extsd</code></li>
+<li>U盘：<code>/mnt/usb1</code>、<code>/mnt/usb2</code>、<code>/mnt/usb3</code></li>
+</ul>
+<p>检查挂载状态：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;os/MountMonitor.h&gt;</span></span>
+
+MOUNTMONITOR-&gt;<span class="hljs-built_in">isMounted</span>(<span class="hljs-string">&quot;/mnt/extsd&quot;</span>);  <span class="hljs-comment">// TF卡是否已挂载</span>
+MOUNTMONITOR-&gt;<span class="hljs-built_in">isMounted</span>(<span class="hljs-string">&quot;/mnt/usb1&quot;</span>);   <span class="hljs-comment">// U盘是否已挂载</span>
+</div></code></pre>
+<p>访问文件路径 = 挂载目录 + 文件自身路径。</p>
+<hr>
+<h2 id="插拔tf卡监听">插拔TF卡监听</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;os/MountMonitor.h&quot;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MyMountListener</span> : <span class="hljs-keyword">public</span> MountMonitor::IMountListener {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">notify</span><span class="hljs-params">(<span class="hljs-type">int</span> what, <span class="hljs-type">int</span> status, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *msg)</span> </span>{
+        <span class="hljs-keyword">switch</span> (status) {
+        <span class="hljs-keyword">case</span> MountMonitor::E_MOUNT_STATUS_MOUNTED:  <span class="hljs-comment">// 插入，msg 为挂载路径</span>
+            <span class="hljs-built_in">LOGD</span>(<span class="hljs-string">&quot;mount path: %s\n&quot;</span>, msg);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> MountMonitor::E_MOUNT_STATUS_REMOVE:   <span class="hljs-comment">// 移除，msg 为卸载路径</span>
+            <span class="hljs-built_in">LOGD</span>(<span class="hljs-string">&quot;remove path: %s\n&quot;</span>, msg);
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+};
+
+<span class="hljs-type">static</span> MyMountListener sMyMountListener;
+
+<span class="hljs-comment">// 注册监听</span>
+MOUNTMONITOR-&gt;<span class="hljs-built_in">addMountListener</span>(&amp;sMyMountListener);
+
+<span class="hljs-comment">// 移除监听</span>
+MOUNTMONITOR-&gt;<span class="hljs-built_in">removeMountListener</span>(&amp;sMyMountListener);
+</div></code></pre>
+<p>也可使用新版接口监听指定路径（需 <code>base-utility</code> 包 9.0.0+）：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;base/base.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">static</span> base::MountNotification <span class="hljs-title">mn_extsd</span><span class="hljs-params">(<span class="hljs-string">&quot;/mnt/extsd&quot;</span>, onMyMountEvent)</span></span>; <span class="hljs-comment">// 监听TF卡</span>
+<span class="hljs-function"><span class="hljs-type">static</span> base::MountNotification <span class="hljs-title">mn_usb1</span><span class="hljs-params">(<span class="hljs-string">&quot;/mnt/usb1&quot;</span>, onMyMountEvent)</span></span>;   <span class="hljs-comment">// 监听U盘</span>
+<span class="hljs-comment">// 传空字符串表示监听所有挂载事件</span>
+<span class="hljs-function"><span class="hljs-type">static</span> base::MountNotification <span class="hljs-title">mn_any</span><span class="hljs-params">(<span class="hljs-string">&quot;&quot;</span>, onMyMountEvent)</span></span>;
+</div></code></pre>
+<blockquote>
+<p><strong>注意</strong>：<code>MountNotification</code> 实例需用 <code>static</code> 修饰，否则实例销毁后停止监听。</p>
+</blockquote>
+<hr>
+<h2 id="gpio操作">GPIO操作</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils/GpioHelper.h&quot;</span></span>
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// 读取脚位状态：返回 1（高电平）、0（低电平）、-1（失败）</span>
+GpioHelper::<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;B_02&quot;</span>);
+
+<span class="hljs-comment">// 设置脚位输出：1 高电平，0 低电平；返回 0 成功，-1 失败</span>
+GpioHelper::<span class="hljs-built_in">output</span>(<span class="hljs-string">&quot;B_02&quot;</span>, <span class="hljs-number">1</span>);
+</div></code></pre>
+<p>各平台可用脚位（部分）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">平台</th>
+<th style="text-align:left">可用脚位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Z11S</td>
+<td style="text-align:left"><code>B_02</code>、<code>B_03</code>、<code>E_20</code></td>
+</tr>
+<tr>
+<td style="text-align:center">SV50PB</td>
+<td style="text-align:left"><code>PIN7</code>~<code>PIN14</code>、<code>PIN23</code>、<code>PIN24</code>、<code>PIN26</code>、<code>PIN27</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="spi操作">SPI操作</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils/SpiHelper.h&quot;</span></span>
+
+<span class="hljs-type">uint8_t</span> tx[<span class="hljs-number">512</span>], rx[<span class="hljs-number">512</span>];
+
+<span class="hljs-comment">// 参数：总线号、模式、时钟频率、位宽、低位在前</span>
+<span class="hljs-function">SpiHelper <span class="hljs-title">spi</span><span class="hljs-params">(<span class="hljs-number">1</span>, SPI_MODE_0, <span class="hljs-number">50</span>*<span class="hljs-number">1000</span>*<span class="hljs-number">1000</span>, <span class="hljs-number">8</span>, <span class="hljs-literal">false</span>)</span></span>;
+
+spi.<span class="hljs-built_in">write</span>(tx, <span class="hljs-number">5</span>);                        <span class="hljs-comment">// 单工写</span>
+spi.<span class="hljs-built_in">read</span>(rx, <span class="hljs-number">8</span>);                         <span class="hljs-comment">// 单工读</span>
+spi.<span class="hljs-built_in">halfduplexTransfer</span>(tx, <span class="hljs-number">5</span>, rx, <span class="hljs-number">8</span>);    <span class="hljs-comment">// 半双工传输</span>
+</div></code></pre>
+<hr>
+<h2 id="重启系统">重启系统</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/reboot.h&gt;</span></span>
+
+<span class="hljs-built_in">sync</span>();               <span class="hljs-comment">// 同步数据，防止丢失</span>
+<span class="hljs-built_in">reboot</span>(RB_AUTOBOOT);  <span class="hljs-comment">// 重启</span>
+</div></code></pre>
+<hr>
+<h2 id="内存和cpu信息">内存和CPU信息</h2>
+<p>通过 ADB 终端查看：</p>
+<pre class="hljs"><code><div>adb shell <span class="hljs-built_in">cat</span> /proc/meminfo   <span class="hljs-comment"># 内存信息</span>
+adb shell <span class="hljs-built_in">cat</span> /proc/cpuinfo   <span class="hljs-comment"># CPU信息</span>
+adb shell busybox top         <span class="hljs-comment"># 实时CPU使用情况</span>
+</div></code></pre>
+<p>通过代码读取内存信息：</p>
+<pre class="hljs"><code><div>FILE *file = <span class="hljs-built_in">fopen</span>(<span class="hljs-string">&quot;/proc/meminfo&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>);
+<span class="hljs-type">char</span> line[<span class="hljs-number">256</span>];
+<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> memTotal, memFree, memAvailable;
+
+<span class="hljs-keyword">while</span> (<span class="hljs-built_in">fgets</span>(line, <span class="hljs-built_in">sizeof</span>(line), file)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strstr</span>(line, <span class="hljs-string">&quot;MemTotal:&quot;</span>))
+        <span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">&quot;MemTotal: %lu kB&quot;</span>, &amp;memTotal);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strstr</span>(line, <span class="hljs-string">&quot;MemFree:&quot;</span>))
+        <span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">&quot;MemFree: %lu kB&quot;</span>, &amp;memFree);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strstr</span>(line, <span class="hljs-string">&quot;MemAvailable:&quot;</span>))
+        <span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">&quot;MemAvailable: %lu kB&quot;</span>, &amp;memAvailable);
+}
+<span class="hljs-built_in">fclose</span>(file);
+</div></code></pre>
+<hr>
+<h1 id="升级与调试">升级与调试</h1>
+<h2 id="adb调试">ADB调试</h2>
+<h3 id="连接方式">连接方式</h3>
+<ul>
+<li><strong>网络连接（推荐）</strong>：设备支持 Wi-Fi 或以太网时，进入相应设置界面获取设备 IP 地址，然后在 IDE 菜单栏选择 <strong>调试配置</strong> -&gt; <strong>ADB配置</strong>，填入 IP 并保存。</li>
+<li><strong>USB连接</strong>：设备不支持网络时使用 USB 数据线连接，电脑识别为 Android 设备即为正常。若有驱动问题请安装 ADB 驱动。</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：如设备使用 A 口（大口）USB，默认为 U 盘模式，可通过以下代码切换为 ADB 模式（重启生效）：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;storage/StoragePreferences.h&quot;</span></span>
+StoragePreferences::<span class="hljs-built_in">putInt</span>(<span class="hljs-string">&quot;sys_usb_mode_key&quot;</span>, <span class="hljs-number">1</span>);
+</div></code></pre>
+</blockquote>
+<h3 id="下载调试">下载调试</h3>
+<p>连接成功后，在项目资源管理器中右键项目名，选择 <strong>下载调试</strong>，或使用快捷键 <code>Ctrl+Alt+R</code>。工具会自动编译并将程序下载到设备中。</p>
+<p><img src="resources/ide/launch_adb.gif" alt=""></p>
+<blockquote>
+<p><strong>注意</strong>：下载调试不会将程序固化到设备中，拔卡或断电重启后程序将恢复。如需固化，请使用制作升级镜像。</p>
+</blockquote>
+<h3 id="通过-adb-固化应用程序">通过 ADB 固化应用程序</h3>
+<pre class="hljs"><code><div>adb push ./update.img /tmp/update.img
+adb shell setprop sys.zkupgrade.flag 255
+adb shell setprop sys.zkupgrade.dir /tmp
+adb shell setprop ctl.restart zkswe
+</div></code></pre>
+<h3 id="常用-adb-命令">常用 ADB 命令</h3>
+<p>在菜单栏选择 <strong>调试配置</strong> -&gt; <strong>打开系统命令行</strong> 后可执行：</p>
+<pre class="hljs"><code><div>adb shell logcat -v <span class="hljs-keyword">time</span>   <span class="hljs-comment"># 查看带时间的日志</span>
+adb shell logcat           <span class="hljs-comment"># 查看简单日志</span>
+adb logcat -c              <span class="hljs-comment"># 清空日志缓存</span>
+adb shell <span class="hljs-built_in">cat</span> /proc/meminfo
+adb shell busybox top
+</div></code></pre>
+<hr>
+<h2 id="查看日志">查看日志</h2>
+<h3 id="添加日志">添加日志</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;utils/Log.h&quot;</span></span>
+
+<span class="hljs-built_in">LOGD</span>(<span class="hljs-string">&quot;onButtonClick_Button1\n&quot;</span>);  <span class="hljs-comment">// 用法与 printf 相同</span>
+</div></code></pre>
+<h3 id="命令行查看日志推荐">命令行查看日志（推荐）</h3>
+<ol>
+<li>菜单栏选择 <strong>调试配置</strong> -&gt; <strong>打开系统命令行</strong></li>
+<li>USB 连接：输入 <code>adb shell logcat -v time</code></li>
+<li>网络连接：先输入 <code>adb connect 192.168.1.123</code>，再输入 <code>adb shell logcat -v time</code></li>
+<li><code>Ctrl+C</code> 停止日志显示</li>
+</ol>
+<h3 id="查看标准输出日志">查看标准输出日志</h3>
+<pre class="hljs"><code><div>adb shell setprop ctl.stop zkswe   <span class="hljs-comment"># 停止应用</span>
+zkgui                               <span class="hljs-comment"># 启动应用并查看标准输出</span>
+</div></code></pre>
+<h3 id="查看系统日志">查看系统日志</h3>
+<pre class="hljs"><code><div>adb shell <span class="hljs-built_in">cat</span> /proc/kmsg
+</div></code></pre>
+<hr>
+<h2 id="从tf卡启动程序">从TF卡启动程序</h2>
+<blockquote>
+<p><strong>注意：TF卡仅支持 FAT32 格式</strong></p>
+</blockquote>
+<ol>
+<li>菜单栏选择 <strong>调试配置</strong> -&gt; <strong>ADB配置</strong>，点击 <code>设置</code> 按钮，设置 ADB 下载目录：<code>/mnt/extsd</code>（TF卡）或 <code>/mnt/usb1</code>（U盘）。</li>
+<li>工具栏点击调试按钮旁的下拉箭头，选择 <strong>路径配置</strong>，选择 TF卡盘符，点击确定。</li>
+<li>点击编译按钮，编译结果将打包输出到配置的盘符下，生成 <code>EasyUI.cfg</code>、<code>ui</code>、<code>lib</code>、<code>font</code> 等文件。</li>
+<li>将 TF 卡插入设备并重新上电，系统检测到TF卡中的文件后将启动卡里的程序。</li>
+</ol>
+<hr>
+<h2 id="制作升级镜像">制作升级镜像</h2>
+<p>将程序固化到设备中，断电重启后程序不会恢复。</p>
+<ol>
+<li>工具栏点击镜像按钮旁的下拉箭头，选择 <strong>路径配置</strong>，选择 <code>update.img</code> 输出目录。</li>
+<li>点击镜像编译按钮，生成 <code>update.img</code> 文件。</li>
+<li>将 <code>update.img</code> 拷贝到 FAT32 格式的TF卡根目录，插入设备重新上电。</li>
+<li>系统检测到升级文件后弹出升级界面，勾选升级项目，点击升级。</li>
+<li>升级完成后及时拔出 TF 卡，防止重复升级。</li>
+</ol>
+<hr>
+<h2 id="自动升级">自动升级</h2>
+<p>在屏幕损坏或触摸不准时，可在 TF 卡根目录创建无后缀文件 <code>zkautoupgrade</code>，插卡后系统将自动勾选升级项并在 2 秒后开始升级。</p>
+<ul>
+<li>在 <code>zkautoupgrade</code> 文件中填写数字可自定义延时秒数</li>
+<li>在同目录放置 <code>zkrebootdelay</code> 文件并填写秒数，可控制升级完成后的延时重启时间（填 <code>-1</code> 表示不重启）</li>
+</ul>
+<hr>
+<h2 id="远程升级">远程升级</h2>
+<p>通过 HTTP 下载 <code>update.img</code> 到设备，再触发升级检测：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;os/UpgradeMonitor.h&quot;</span></span>
+
+<span class="hljs-comment">// 检测指定目录下是否有 update.img，有则弹出升级提示框</span>
+UpgradeMonitor::<span class="hljs-built_in">getInstance</span>()-&gt;<span class="hljs-built_in">checkUpgradeFile</span>(<span class="hljs-string">&quot;/mnt/extsd/temp&quot;</span>);
+</div></code></pre>
+<p><strong>避免反复升级</strong>：将镜像下载到 <code>/mnt/extsd/temp/</code> 等子目录（而非 <code>/mnt/extsd/</code>），并同步修改检测函数的参数。</p>
+<p><strong>强制自动更新</strong>：在下载完成后创建 <code>zkautoupgrade</code> 文件即可触发自动升级。</p>
+<hr>
+<h2 id="批量升级">批量升级</h2>
+<p>在同一局域网中，通过 IP 对多台设备同时升级。</p>
+<ol>
+<li>下载并安装批量升级软件。</li>
+<li>点击 <code>设置</code>，配置：
+<ul>
+<li>升级文件（<code>update.img</code>）</li>
+<li>项目名（匹配设备 <code>ro.app.name</code> 属性）</li>
+<li>升级目标版本号（匹配设备 <code>ro.app.version</code> 属性）</li>
+<li>IP 配置文件（每行一个 IP，支持通配符 <code>*</code>）</li>
+</ul>
+</li>
+<li>保存设置后，工具将自动连接设备进行升级。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：仅支持 Wi-Fi 或以太网连接的设备，不支持 USB；仅支持 Z20、Z21、Z261 平台。</p>
+</blockquote>
+<hr>
+<h1 id="附录">附录</h1>
+<h2 id="常见问题">常见问题</h2>
+<p><strong>在UI主线程中做耗时操作导致插卡不显示升级界面</strong></p>
+<p>界面刷新在UI主线程中处理，如果主线程有耗时操作或出现死循环，将影响UI刷新，导致插卡不显示升级界面。<code>onUI_init</code>、<code>onUI_Timer</code> 等回调均在UI主线程中调用，请检查这些函数中是否有耗时操作。出现此情况可重新上电，系统起来后会优先检测是否需要升级。</p>
+<p><strong>无法下载调试/下载调试失败</strong></p>
+<p>首先确认连接方式：带 Wi-Fi 的设备仅支持 Wi-Fi 连接，不带 Wi-Fi 的设备只能使用 USB 线连接。然后在菜单栏选择 <strong>调试配置 -&gt; ADB配置</strong>，设置对应的连接方式后再次尝试下载。</p>
+<p><strong>程序突然自己重启或卡住</strong></p>
+<p>出现非预期情况时，首先查看日志，尝试反复重现问题。程序崩溃大部分原因是指针的错误用法（空指针、数组越界、内存释放后仍在使用等）。程序卡住则从 <strong>线程死锁</strong>、<strong>代码死循环</strong>、<strong>长时间耗时操作</strong> 等方向分析。</p>
+<hr>
+<h2 id="安装adb驱动">安装ADB驱动</h2>
+<p>适用于 Windows XP / Vista / 7 / 8 / 10 / 11。</p>
+<ol>
+<li>下载 <a href="resources/ADBDriverInstaller.zip">驱动安装程序</a></li>
+<li>通过 USB 将设备连接到计算机。</li>
+<li>打开 ADB Driver Installer，点击 <strong>Install</strong> 按钮。
+<ul>
+<li>若系统提示无法验证驱动发布者，选择 <strong>&quot;始终安装此驱动程序软件&quot;</strong>。</li>
+</ul>
+</li>
+<li>驱动将自动安装完成。</li>
+</ol>
+<blockquote>
+<p>Windows XP 用户安装驱动后建议重启。</p>
+</blockquote>
+
+</body>
+</html>
