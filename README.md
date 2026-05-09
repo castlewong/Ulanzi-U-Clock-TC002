@@ -182,4 +182,12 @@ GpioHelper::output("GPIO_06", 1);    // 仅 GPIO_06 / GPIO_85 预留
 
 ## 许可
 
-参见仓库根目录的 LICENSE（如未提供，请按 Ulanzi 官方说明使用）。
+本项目主体代码采用 **[GNU General Public License v3.0 or later (GPL-3.0-or-later)](LICENSE)** 发布。
+
+任何衍生作品（包括但不限于二次开发的固件、修改版的 Demo）在分发时必须：
+
+- 以同样的 GPL-3.0-or-later 协议开放源代码
+- 保留原作者版权声明
+- 在文档中明确标注修改
+
+仓库内还包含若干第三方组件（BlueZ、Adafruit GFX 字体、FlyThings SDK 等），分别遵循其原始许可证。详见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
