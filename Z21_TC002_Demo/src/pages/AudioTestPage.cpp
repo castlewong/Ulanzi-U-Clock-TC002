@@ -17,7 +17,7 @@ static const Color COLOR_GRAY(80, 80, 80);
 AudioTestPage::AudioTestPage()
     : PageBase("AudioTestPage"),
       mMicPercent(0),
-      mVolumeLevel(3),
+      mVolumeLevel(1),
       mIsPlaying(false) {
 }
 
@@ -34,6 +34,7 @@ void AudioTestPage::onEnter() {
     mMicPercent = 0;
     mIsPlaying = true;
     McuManager::getInstance().setAutoMicReport(true);
+    awtrix::AudioManager::getInstance().setVolume(mVolumeLevel);
     awtrix::AudioManager::getInstance().playAudio(audioPath);
     drawLocked();
 }
