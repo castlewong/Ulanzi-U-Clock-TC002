@@ -12,7 +12,7 @@ void keyEventCb(int keyCode, int keyStatus) {
 		EASYUICONTEXT->openActivity("rgbTestActivity", nullptr);
 		break;
 	case E_KEYCODE_ANTI_CLOCKWISE:
-		EASYUICONTEXT->openActivity("audioTestActivity", nullptr);
+		EASYUICONTEXT->openActivity("gameSnakeActivity", nullptr);
 		break;
 	default:
 		break;

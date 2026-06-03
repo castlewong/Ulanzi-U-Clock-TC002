@@ -11,6 +11,8 @@
 #include "pages/BtnTestPage.h"
 #include "pages/AudioTestPage.h"
 #include "pages/WifiTestPage.h"
+#include "pages/HeartClockPage.h"
+#include "pages/SnakePage.h"
 #include "ble/bluetooth_service.h"
 #include "net/NetManager.h"
 #include <thread>
@@ -83,10 +85,12 @@ static void onUI_init(){
 	PageManager::getInstance().registerPage(std::unique_ptr<PageBase>(new RgbTestPage()));
 	PageManager::getInstance().registerPage(std::unique_ptr<PageBase>(new AudioTestPage()));
 	PageManager::getInstance().registerPage(std::unique_ptr<PageBase>(new WifiTestPage()));
+	PageManager::getInstance().registerPage(std::unique_ptr<PageBase>(new HeartClockPage()));
+	PageManager::getInstance().registerPage(std::unique_ptr<PageBase>(new SnakePage()));
 
 	KeyManager::getInstance().start();
     loadConfigAndStart();
-    EASYUICONTEXT->openActivity("btnTestActivity", nullptr);
+    EASYUICONTEXT->openActivity("heartClockActivity", nullptr);
 }
 
 /**

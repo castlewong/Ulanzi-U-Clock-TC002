@@ -9,7 +9,7 @@ void keyEventCb(int keyCode, int keyStatus) {
 	}
 	switch(keyCode) {
 	case E_KEYCODE_CLOCKWISE:
-		EASYUICONTEXT->openActivity("btnTestActivity", nullptr);
+		EASYUICONTEXT->openActivity("heartClockActivity", nullptr);
 		break;
 	case E_KEYCODE_ANTI_CLOCKWISE:
 		EASYUICONTEXT->openActivity("wifiTestActivity", nullptr);
