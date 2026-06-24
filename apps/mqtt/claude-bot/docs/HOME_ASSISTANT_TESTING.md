@@ -2,6 +2,15 @@
 
 本文说明如何在真实 TC002 设备上测试 `claude-bot`。
 
+当前测试分两层：
+
+| 层级 | 目标 |
+|---|---|
+| Blueprint 测试 | 验证 `loop` / `usage` 两个状态能通过 Home Assistant 和 MQTT 显示到 TC002 |
+| 真实用量测试 | 验证本地脚本能拿到 Claude Code 用量、重新渲染画面并发布到 TC002 |
+
+截至当前版本，Blueprint 自带的 `usage` 是静态 demo 图，不会自动读取 Claude Code 真实用量。
+
 ## 1. 基本概念
 
 ```text
@@ -71,9 +80,56 @@ mosquitto_pub -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot -m '{"duration":3600
 | 状态值 | 显示效果 |
 |---|---|
 | `loop` | Claude Bot 循环动画 |
-| `usage` | Claude Bot 用量条（静态） |
+| `usage` | Claude Bot 用量条（静态 demo） |
 
-## 8. 排障
+## 8. 真实用量测试
+
+真实用量接入现已实现，见 `lab/publish_usage.sh`。
+
+### 前提
+
+- TC002 和 MQTT broker 在同一局域网
+- `python3` 已安装 Pillow（`pip install pillow`）
+- `npx ccusage` 可用
+
+### 快速测试
+
+```bash
+cd apps/mqtt/claude-bot
+
+TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
+TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
+TC002_MQTT_HOST=127.0.0.1 \
+TC002_MQTT_TOPIC=ulanzi_1bf6/custom/claude_bot \
+bash lab/publish_usage.sh
+```
+
+### 分步调试
+
+```bash
+# 1. 查看用量快照（不发布）
+TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
+TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
+node lab/claude_usage_snapshot.js
+
+# 2. 手动渲染（不读用量，不发布）
+python3 lab/render_usage.py 65 42 --file /tmp/claude_bot_usage.gif
+
+# 3. 用渲染出的 base64 手动发布
+python3 lab/render_usage.py 65 42 | xargs -I{} mosquitto_pub \
+  -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot \
+  -m '{“duration”:3600,”text”:[],”image”:[{“data”:”data:image/gif;base64,{}”,”position”:[0,0]}],”draw”:[]}'
+```
+
+### 轮询模式
+
+```bash
+TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
+TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
+bash lab/publish_usage.sh --loop 300
+```
+
+## 9. 排障
 
 ### MQTT 发布成功但 TC002 不变化
 
