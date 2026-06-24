@@ -21,7 +21,7 @@
 
 ## 预览
 
-见 `preview/demo.gif`。
+见 `preview/demo.gif`（循环动画）和 `preview/demo_usage.gif`（用量显示）。
 
 ## 依赖
 
@@ -49,7 +49,7 @@ topic 格式：
 ulanzi_1bf6/custom/claude_bot
 ```
 
-`[PREFIX]` 通常是 MQTT 前缀加设备 MAC 地址后四位。比如 MQTT 前缀为 `ulanzi`，设备 MAC 后四位为 `1bf6`，则前缀通常为 `ulanzi_1bf6`。
+`[PREFIX]` 通常是 MQTT 前缀加设备 MAC 地址后四位。
 
 ## 与 Claude Code / Codex 搭配使用
 
@@ -57,9 +57,9 @@ ulanzi_1bf6/custom/claude_bot
 
 ```text
 Claude Code / Codex hook
-  -> 更新 Home Assistant 状态实体
-  -> Blueprint 发布 MQTT
-  -> TC002 显示 Claude Bot
+  → 更新 Home Assistant 状态实体
+  → Blueprint 发布 MQTT
+  → TC002 显示 Claude Bot
 ```
 
 第一次测试可以手动切换 `input_select` helper。确认 TC002 能正常显示后，再把 Claude Code、Codex 或其它编程助手的 hook 接进来。
@@ -73,30 +73,22 @@ Claude Code / Codex hook
 
 ## 真实用量接入
 
-真实用量需要先把 Claude Code 用量转换成两个 `0-100` 的百分比，再生成新的 52x16 画面并发布到 TC002。
-
-`lab/publish_usage.sh` 已经串联了完整链路：
+`lab/publish_usage.sh` 读取 Codex 每日花费并发布到 TC002，无需任何手动预算配置：
 
 ```bash
 cd apps/mqtt/claude-bot
 
 # 单次发布：
-TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
-TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
-TC002_MQTT_HOST=127.0.0.1 \
-TC002_MQTT_TOPIC=ulanzi_1bf6/custom/claude_bot \
-bash lab/publish_usage.sh
+TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh
 
 # 持续轮询（每 300 秒）：
-TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
-TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
-bash lab/publish_usage.sh --loop 300
+TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh --loop 300
 ```
 
 ```text
-ccusage (本地 Claude Code 用量日志)
-  → lab/claude_usage_snapshot.js (提取 token 数 → 百分比)
-  → lab/render_usage.py (渲染 52×16 动画 GIF)
+ccusage codex daily (读取 Codex 用量日志)
+  → lab/claude_usage_snapshot.js (计算今日/本周花费 USD)
+  → lab/render_usage.py (渲染 52×16 花费动画 GIF)
   → mosquitto_pub (发布到 TC002 Custom App MQTT topic)
 ```
 
@@ -104,17 +96,19 @@ ccusage (本地 Claude Code 用量日志)
 
 | 脚本 | 职责 |
 |---|---|
-| `lab/claude_usage_snapshot.js` | 读取用量，输出带百分比的 JSON |
-| `lab/render_usage.py` | 接收百分比，输出 base64 GIF |
+| `lab/claude_usage_snapshot.js` | 读取 Codex 用量，输出花费 JSON (costUSD) |
+| `lab/render_usage.py` | 接收花费金额，渲染 base64 GIF |
 | `lab/publish_usage.sh` | 串联上述两步 + MQTT 发布 |
 
-用量条颜色随百分比变化：
+颜色阈值基于 Codex Plus ($200/月) 的日/周预算：
 
-| 范围 | 颜色 | 含义 |
-|---|---|---|
-| 0–64% | 绿色 | 正常 |
-| 65–84% | 黄色 | 告警 |
-| 85–100% | 红色 | 危险 |
+| 周期 | 绿色 | 黄色 | 红色 |
+|---|---|---|---|
+| 日 | < $8 | $8–12 | > $12 |
+| 周 | < $50 | $50–80 | > $80 |
+
+花费金额来自 ccusage 的模型定价计算，已自动排除缓存命中的免费 token。
+无需手动设置任何预算或限额。
 
 详见 `lab/README.md`。
 

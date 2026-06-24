@@ -97,36 +97,28 @@ mosquitto_pub -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot -m '{"duration":3600
 ```bash
 cd apps/mqtt/claude-bot
 
-TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
-TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
-TC002_MQTT_HOST=127.0.0.1 \
-TC002_MQTT_TOPIC=ulanzi_1bf6/custom/claude_bot \
-bash lab/publish_usage.sh
+TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh
 ```
 
 ### 分步调试
 
 ```bash
 # 1. 查看用量快照（不发布）
-TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
-TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
 node lab/claude_usage_snapshot.js
 
 # 2. 手动渲染（不读用量，不发布）
-python3 lab/render_usage.py 65 42 --file /tmp/claude_bot_usage.gif
+python3 lab/render_usage.py 8 74 --file /tmp/claude_bot_usage.gif
 
 # 3. 用渲染出的 base64 手动发布
-python3 lab/render_usage.py 65 42 | xargs -I{} mosquitto_pub \
+python3 lab/render_usage.py 8 74 | xargs -I{} mosquitto_pub \
   -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot \
-  -m '{“duration”:3600,”text”:[],”image”:[{“data”:”data:image/gif;base64,{}”,”position”:[0,0]}],”draw”:[]}'
+  -m '{"duration":3600,"text":[],"image":[{"data":"data:image/gif;base64,{}","position":[0,0]}],"draw":[]}'
 ```
 
 ### 轮询模式
 
 ```bash
-TC002_CLAUDE_5H_TOKEN_BUDGET=10000000 \
-TC002_CLAUDE_WEEK_TOKEN_BUDGET=50000000 \
-bash lab/publish_usage.sh --loop 300
+TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh --loop 300
 ```
 
 ## 9. 排障
