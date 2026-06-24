@@ -8,16 +8,11 @@
 
 ## 已收录的应用
 
-> 目录还没有收到第一个社区贡献。👀 期待你的作品 —— 提交方法见下方。
-
-<!--
-社区应用在此以表格列出，示例：
-
 | 应用 | 类型 | 简介 | 作者 | 一键导入 |
 |---|---|---|---|---|
-| [battery-monitor](battery-monitor/) | HA 蓝图 | 手机低电量在 TC002 闪烁告警 | @your-handle | [![Open in HA](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=...) |
-| [weather-card](weather-card/) | HA 蓝图 | 在时钟上滚动显示和风天气预报 | @your-handle | [![Open in HA](https://my.home-assistant.io/badges/blueprint_import.svg)](...) |
--->
+| [vibe-coding-signal-light](vibe-coding-signal-light/) | HA 蓝图 | 把 TC002 变成桌面状态红绿灯，显示 Claude Code / Codex / CI 等 AI 编程助手的运行状态（idle / working / attention / blocked） | 王行知 ([@castlewong](https://github.com/castlewong)) | [![Open in HA](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2FUlanziTechnology%2FUlanzi-U-Clock-TC002%2Fmain%2Fapps%2Fmqtt%2Fvibe-coding-signal-light%2Fblueprint.yaml) |
+
+> 👀 期待更多社区作品 —— 提交方法见下方。
 
 ---
 
