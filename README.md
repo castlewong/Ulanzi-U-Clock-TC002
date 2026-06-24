@@ -25,21 +25,27 @@ Ulanzi TC002 像素时钟的官方开源开发资料。本仓库面向希望在 
 │   ├── 说明文档.md
 │   ├── 说明文档.html
 │   └── resources/
-└── Z21_TC002_Demo/        # Z21 平台示例工程，可直接导入 IDE 编译
-    ├── Manifest.xml       # 项目清单：平台、依赖包
-    ├── ui/                # *.ftu 界面文件（用 IDE 可视化编辑）
-    ├── src/
-    │   ├── Main.cpp       # 入口：初始化 MCU、启动界面
-    │   ├── activity/      # IDE 自动生成，请勿手动修改
-    │   ├── logic/         # 每个 ftu 对应一个 *Logic.cc，写界面逻辑
-    │   ├── pages/         # 各功能演示页 (Btn/Rgb/Audio/Wifi)
-    │   ├── managers/      # KeyManager / AudioManager / McuManager 等
-    │   ├── mcuProtocol/   # MCU 串口协议
-    │   ├── ble/           # BLE GATT 服务
-    │   ├── utils/         # GpioHelper 等工具
-    │   └── dependencies/  # 私有静态库 (gatt-server) 与可执行文件
-    ├── resources/         # 随固件打包的资源文件
-    └── README.md          # Demo 各功能 API 速查
+├── Z21_TC002_Demo/        # Z21 平台官方示例工程，可直接导入 IDE 编译
+│   ├── Manifest.xml       # 项目清单：平台、依赖包
+│   ├── ui/                # *.ftu 界面文件（用 IDE 可视化编辑）
+│   ├── src/
+│   │   ├── Main.cpp       # 入口：初始化 MCU、启动界面
+│   │   ├── activity/      # IDE 自动生成，请勿手动修改
+│   │   ├── logic/         # 每个 ftu 对应一个 *Logic.cc，写界面逻辑
+│   │   ├── pages/         # 各功能演示页 (Btn/Rgb/Audio/Wifi)
+│   │   ├── managers/      # KeyManager / AudioManager / McuManager 等
+│   │   ├── mcuProtocol/   # MCU 串口协议
+│   │   ├── ble/           # BLE GATT 服务
+│   │   ├── utils/         # GpioHelper 等工具
+│   │   └── dependencies/  # 私有静态库 (gatt-server) 与可执行文件
+│   ├── resources/         # 随固件打包的资源文件
+│   └── README.md          # Demo 各功能 API 速查
+├── apps/                  # 社区贡献的应用
+│   ├── flythings/         # 第三方 FlyThings 应用（设备端 C++ 工程）
+│   └── mqtt/              # Home Assistant 蓝图等 MQTT 集成方案
+├── CONTRIBUTING.md        # 贡献指南：两类应用的提交规范与 PR 流程
+├── LICENSE                # GPL-3.0-or-later 许可证全文
+└── THIRD_PARTY_NOTICES.md # 第三方组件（BlueZ、Adafruit GFX 等）声明
 ```
 
 ## 快速开始
@@ -179,6 +185,15 @@ GpioHelper::output("GPIO_06", 1);    // 仅 GPIO_06 / GPIO_85 预留
 - [`IDE使用说明/说明文档.md`](IDE使用说明/说明文档.md) — FlyThings IDE 完整开发指南：项目结构、Manifest、定时器、串口框架、网络、存储、ADB、镜像、远程升级等
 - [`Z21_TC002_Demo/README.md`](Z21_TC002_Demo/README.md) — 各硬件外设 Demo 的 API 说明（含旋钮/按键码、SPI、Audio、MIC、Wi-Fi/BLE、GPIO）
 - [FlyThings 依赖包仓库](https://package.flythings.cn/)
+
+## 社区贡献
+
+欢迎社区开发者向本仓库提交两类应用：
+
+- **FlyThings 应用** — 跑在 TC002 设备本体上的 C++ 工程，提交到 [`apps/flythings/`](apps/flythings/)
+- **MQTT 应用** — 主要为 Home Assistant 蓝图，用户在自己的 HA 实例里一键导入并通过 MQTT 控制 TC002，提交到 [`apps/mqtt/`](apps/mqtt/)（详见 [`apps/mqtt/README.md`](apps/mqtt/README.md)）
+
+完整提交规范、目录约定、PR 流程见 **[`CONTRIBUTING.md`](CONTRIBUTING.md)**。
 
 ## 许可
 
