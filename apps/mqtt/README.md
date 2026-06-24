@@ -8,9 +8,20 @@
 
 ## 已收录的应用
 
-| 应用 | 类型 | 简介 | 作者 | 一键导入 |
-|---|---|---|---|---|
-| [vibe-coding-signal-light](vibe-coding-signal-light/) | HA 蓝图 | 把 TC002 变成桌面状态红绿灯，显示 Claude Code / Codex / CI 等 AI 编程助手的运行状态（idle / working / attention / blocked） | 王行知 ([@castlewong](https://github.com/castlewong)) | [![Open in HA](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2FUlanziTechnology%2FUlanzi-U-Clock-TC002%2Fmain%2Fapps%2Fmqtt%2Fvibe-coding-signal-light%2Fblueprint.yaml) |
+### [vibe-coding-signal-light](vibe-coding-signal-light/)
+
+<img src="vibe-coding-signal-light/preview/demo.gif" width="416" alt="vibe-coding-signal-light 预览（原始 52×16 像素，按 8× 放大）">
+
+> **TC002 桌面状态红绿灯** —— 显示 Claude Code / Codex / CI 等 AI 编程助手的运行状态（`idle` / `working` / `attention` / `blocked` / `off`）
+
+| | |
+|---|---|
+| **类型** | Home Assistant 蓝图 |
+| **作者** | 王行知（[@castlewong](https://github.com/castlewong)） |
+| **导入** | [![Open in HA](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2FUlanziTechnology%2FUlanzi-U-Clock-TC002%2Fmain%2Fapps%2Fmqtt%2Fvibe-coding-signal-light%2Fblueprint.yaml) |
+| **文档** | [vibe-coding-signal-light/docs/README.md](vibe-coding-signal-light/docs/README.md) |
+
+---
 
 > 👀 期待更多社区作品 —— 提交方法见下方。
 
