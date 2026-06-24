@@ -11,7 +11,7 @@
 
 > 应用名 `<your-app-name>` 用小写字母 + 数字 + 短横线，例如 `weather-clock`、`stock-ticker`、`battery-monitor`。同类型下不可重名。
 >
-> 参考形态可对比社区项目 [jeeftor/HomeAssistant](https://github.com/jeeftor/HomeAssistant) —— 蓝图 YAML + 预览图 + "Open in HA" 一键导入按钮。
+
 
 ---
 
@@ -39,7 +39,7 @@
 
 **FlyThings 应用** 顶层至少包含：
 
-```
+```raw
 apps/flythings/<your-app-name>/
 ├── README.md          # 应用介绍、编译/运行说明、截图
 ├── manifest.json      # 应用元信息（见下）
@@ -48,7 +48,7 @@ apps/flythings/<your-app-name>/
 
 **MQTT 应用**（HA 蓝图）顶层至少包含：
 
-```
+```raw
 apps/mqtt/<your-app-name>/
 ├── blueprint.yaml     # HA 蓝图主文件，元信息直接写在 blueprint: 段
 ├── preview/           # 至少一张运行截图或 GIF
@@ -115,7 +115,7 @@ apps/mqtt/<your-app-name>/
 
 ### 目录结构
 
-```
+```raw
 apps/flythings/<your-app-name>/
 ├── README.md
 ├── manifest.json
@@ -139,10 +139,8 @@ apps/flythings/<your-app-name>/
 3. **不要修改 `src/activity/` 下 IDE 自动生成的代码**
 4. **入口必须设置防砖标志**（参考 [`Z21_TC002_Demo/README.md`](Z21_TC002_Demo/README.md) 的"注意事项"）：
 
-   ```cpp
    #include <os/SystemProperties.h>
    SystemProperties::setString("sys.zkapp.state", "running");
-   ```
 
 5. **`Manifest.xml` 中 `platform` 必须是 `Z21`**（这是 TC002 的平台标识）
 
@@ -161,7 +159,7 @@ apps/flythings/<your-app-name>/
 
 ### 目录结构
 
-```
+```raw
 apps/mqtt/<your-app-name>/
 ├── blueprint.yaml         # 必填：HA 蓝图主文件，元信息写在 blueprint: 段
 ├── icons/                 # 可选：TC002 显示用的 8x8 像素图标 (*.png / *.gif)
@@ -277,7 +275,7 @@ git checkout -b mqtt/home-assistant-bridge
 
 在对应目录下完成你的应用。Commit 信息建议格式：
 
-```
+```raw
 <type>(<app-name>): <一句话说明>
 
 可选的多行详细描述。
@@ -287,14 +285,13 @@ Signed-off-by: Your Name <your@email.com>
 
 示例：
 
-```
+```raw
 feat(flythings/weather-clock): 初始版本，支持和风天气 API
 
 - 主页显示当前气温与天气图标
 - 三日预报副页
 ```
-
-```
+```raw
 feat(mqtt/battery-monitor): 添加手机电量低告警 HA 蓝图
 
 - 监听任意 device_class=battery 的传感器
