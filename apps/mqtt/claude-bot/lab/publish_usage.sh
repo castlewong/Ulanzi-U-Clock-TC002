@@ -1,90 +1,104 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────
-# TC002 Claude Bot — Codex cost-based usage publisher
+# TC002 Claude Bot — 限额用量发布脚本
 # ─────────────────────────────────────────────────────────────
-# Reads Codex daily usage (via ccusage), renders a 52x16
-# cost-based usage GIF, and publishes it to the TC002 Custom App
-# MQTT topic.
+# 从 Claude Code statusLine 状态文件或手动输入读取限额百分比，
+# 渲染 52x16 限额用量 GIF，并通过 MQTT 发布到 TC002 Custom App。
 #
-# No budget configuration is needed — costs come from ccusage,
-# which applies per-model pricing to non-cache tokens.
+# 两种模式：
+#   1. 从状态文件读取（由 claude_statusline_bridge.js 写入）
+#   2. 手动传入两个百分比参数
 #
-# Prerequisites:
-#   - Python 3 with Pillow (pip install pillow)
-#   - Node.js with npx (for ccusage)
-#   - mosquitto_pub (brew install mosquitto)
+# 依赖：
+#   - Python 3 + Pillow（pip install pillow）
+#   - mosquitto_pub（brew install mosquitto）
 #
-# Environment variables:
-#   TC002_MQTT_HOST                MQTT broker host (default: 127.0.0.1)
-#   TC002_MQTT_PORT                MQTT broker port (default: 1883)
-#   TC002_MQTT_TOPIC               Custom App topic (default: ulanzi_1bf6/custom/claude_bot)
-#   TC002_DURATION                 payload duration in seconds (default: 3600)
-#   TC002_TIMEZONE                 timezone for ccusage (default: Asia/Shanghai)
+# 环境变量：
+#   TC002_MQTT_HOST                MQTT broker 地址（默认：127.0.0.1）
+#   TC002_MQTT_PORT                MQTT broker 端口（默认：1883）
+#   TC002_MQTT_TOPIC               Custom App topic（默认：ulanzi_1bf6/custom/claude_bot）
+#   TC002_DURATION                 payload 显示时长，单位秒（默认：86400）
+#   TC002_STATE_FILE               状态文件路径（默认：/tmp/claude-statusline-state.json）
 #
-# Usage:
+# 用法：
+#   # 从状态文件读取（推荐）：
 #   TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh
 #
-#   # Loop mode: publish every 300 seconds
+#   # 手动传入百分比：
+#   bash lab/publish_usage.sh 75 42
+#
+#   # 轮询模式（每 300 秒读取一次状态文件）：
 #   bash lab/publish_usage.sh --loop 300
 # ─────────────────────────────────────────────────────────────
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# ── Config ──────────────────────────────────────────────────
+# ── 配置项 ──────────────────────────────────────────────────
 MQTT_HOST="${TC002_MQTT_HOST:-127.0.0.1}"
 MQTT_PORT="${TC002_MQTT_PORT:-1883}"
 MQTT_TOPIC="${TC002_MQTT_TOPIC:-ulanzi_1bf6/custom/claude_bot}"
-DURATION="${TC002_DURATION:-3600}"
-TIMEZONE="${TC002_TIMEZONE:-Asia/Shanghai}"
+DURATION="${TC002_DURATION:-31536000}"  # 默认一年，保持常亮
+STATE_FILE="${TC002_STATE_FILE:-/tmp/claude-statusline-state.json}"
 
-# ── Help ────────────────────────────────────────────────────
+# ── 帮助信息 ────────────────────────────────────────────────
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   cat <<EOF
-Usage: bash lab/publish_usage.sh [--loop SECONDS]
+用法: bash lab/publish_usage.sh [五分钟限额百分比 七天限额百分比] [--loop 秒数]
 
-Reads Codex daily cost from ccusage and displays it on TC002.
-No token budget configuration is needed — costs are calculated
-by ccusage using per-model pricing on non-cache tokens.
+通过 MQTT 将 Claude Code 限额使用率发布到 TC002。
 
-Optional env:
-  TC002_MQTT_HOST    (default: 127.0.0.1)
-  TC002_MQTT_PORT    (default: 1883)
-  TC002_MQTT_TOPIC   (default: ulanzi_1bf6/custom/claude_bot)
-  TC002_DURATION     (default: 3600)
-  TC002_TIMEZONE     (default: Asia/Shanghai)
+如果不传参数：从状态文件读取（由 claude_statusline_bridge.js 写入）。
+如果传两个数字：直接作为五分钟和七天限额百分比。
 
-Options:
-  --loop SECONDS     Run continuously, publishing every SECONDS
+可选环境变量：
+  TC002_MQTT_HOST    （默认：127.0.0.1）
+  TC002_MQTT_PORT    （默认：1883）
+  TC002_MQTT_TOPIC   （默认：ulanzi_1bf6/custom/claude_bot）
+  TC002_DURATION     （默认：86400）
+  TC002_STATE_FILE   （默认：/tmp/claude-statusline-state.json）
+
+选项：
+  --loop 秒数        持续运行，每隔指定秒数发布一次
 EOF
   exit 0
 fi
 
-# ── Check dependencies ───────────────────────────────────────
-for cmd in python3 node npx mosquitto_pub; do
+# ── 检查依赖 ────────────────────────────────────────────────
+for cmd in python3 mosquitto_pub; do
   if ! command -v "$cmd" &>/dev/null; then
-    echo "❌ Missing dependency: $cmd" >&2
+    echo "❌ 缺少依赖：$cmd" >&2
     exit 1
   fi
 done
 
-# ── Step 1: Read Codex usage ─────────────────────────────────
-read_usage() {
-  echo "📊 Reading Codex usage via ccusage..." >&2
-  TC002_TIMEZONE="$TIMEZONE" node "$SCRIPT_DIR/claude_usage_snapshot.js"
+# ── 从状态文件读取限额百分比 ─────────────────────────────────
+read_from_state_file() {
+  if [[ ! -f "$STATE_FILE" ]]; then
+    echo "⚠️  状态文件不存在：$STATE_FILE" >&2
+    echo "   请先运行 claude_statusline_bridge.js，或手动传入百分比。" >&2
+    return 1
+  fi
+  python3 -c "
+import sys, json
+with open('$STATE_FILE') as f:
+    state = json.load(f)
+rl = state.get('rate_limits', {})
+print(rl.get('five_hour_pct', 0))
+print(rl.get('seven_day_pct', 0))
+"
 }
 
-# ── Step 2: Render usage GIF ─────────────────────────────────
+# ── 渲染限额用量 GIF ────────────────────────────────────────
 render_gif() {
-  local day_cost="$1"
-  local week_cost="$2"
-  echo "🎨 Rendering usage GIF (today=\$${day_cost} week=\$${week_cost})..." >&2
-  python3 "$SCRIPT_DIR/render_usage.py" "$day_cost" "$week_cost"
+  local five_hour_pct="$1"
+  local seven_day_pct="$2"
+  echo "🎨 渲染限额用量 GIF（5H:${five_hour_pct}% 7d:${seven_day_pct}%）..." >&2
+  python3 "$SCRIPT_DIR/render_usage.py" "$five_hour_pct" "$seven_day_pct"
 }
 
-# ── Step 3: Publish to MQTT ──────────────────────────────────
+# ── 通过 MQTT 发布 ──────────────────────────────────────────
 publish_mqtt() {
   local b64="$1"
   local payload
@@ -92,53 +106,46 @@ publish_mqtt() {
 {"duration":$DURATION,"text":[],"image":[{"data":"data:image/gif;base64,$b64","position":[0,0]}],"draw":[]}
 EOP
   )
-  echo "📤 Publishing to $MQTT_TOPIC..." >&2
+  echo "📤 发布到 $MQTT_TOPIC..." >&2
   mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "$MQTT_TOPIC" -m "$payload"
-  echo "✅ Published to $MQTT_TOPIC" >&2
+  echo "✅ 已发布到 $MQTT_TOPIC" >&2
 }
 
-# ── Main pipeline ────────────────────────────────────────────
-run_once() {
-  local snapshot day_cost week_cost
-
-  snapshot=$(read_usage)
-
-  day_cost=$(echo "$snapshot" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-t = d.get('today')
-if t and t.get('costUSD') is not None:
-    print(t['costUSD'])
-else:
-    print(0)
-")
-
-  week_cost=$(echo "$snapshot" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-w = d.get('week')
-if w and w.get('costUSD') is not None:
-    print(w['costUSD'])
-else:
-    print(0)
-")
-
-  echo "  today: \$${day_cost}  |  week: \$${week_cost}" >&2
-
+# ── 主流程 ──────────────────────────────────────────────────
+run_once_manual() {
+  local five_hour_pct="$1"
+  local seven_day_pct="$2"
   local b64
-  b64=$(render_gif "$day_cost" "$week_cost")
+  b64=$(render_gif "$five_hour_pct" "$seven_day_pct")
   publish_mqtt "$b64"
 }
 
-# ── Entry ────────────────────────────────────────────────────
-run_once
+run_once_from_state() {
+  local limits
+  limits=$(read_from_state_file) || return 1
+  local five_hour_pct seven_day_pct
+  five_hour_pct=$(echo "$limits" | head -1)
+  seven_day_pct=$(echo "$limits" | tail -1)
+  echo "📊 限额使用率：5H=${five_hour_pct}% 7d=${seven_day_pct}%" >&2
+  local b64
+  b64=$(render_gif "$five_hour_pct" "$seven_day_pct")
+  publish_mqtt "$b64"
+}
 
-# Optional loop mode
+# ── 入口 ────────────────────────────────────────────────────
+if [[ $# -ge 2 && "$1" != "--loop" ]]; then
+  run_once_manual "$1" "$2"
+  shift 2
+else
+  run_once_from_state
+fi
+
+# 可选轮询模式
 if [[ "${1:-}" == "--loop" ]]; then
   LOOP_SECONDS="${2:-300}"
-  echo "🔁 Looping every ${LOOP_SECONDS}s (Ctrl+C to stop)..." >&2
+  echo "🔁 每隔 ${LOOP_SECONDS} 秒轮询一次（Ctrl+C 停止）..." >&2
   while true; do
     sleep "$LOOP_SECONDS"
-    run_once || echo "⚠️  One cycle failed, will retry next loop." >&2
+    run_once_from_state || echo "⚠️  本轮失败，下轮重试。" >&2
   done
 fi

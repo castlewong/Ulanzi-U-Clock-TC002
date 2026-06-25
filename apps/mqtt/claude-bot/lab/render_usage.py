@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""Render a 52x16 Claude Bot usage GIF for TC002.
+"""渲染 TC002 Claude Bot 限额用量 GIF。
 
-Takes two cost values (today's USD, this week's USD) and produces a 52x16
-animated GIF with the Claude Bot mascot + cost bars.
+接收两个限额使用率百分比（5 小时窗口、7 天窗口），生成 52x16
+动画 GIF，包含 Claude Bot 吉祥物和用量条。
 
-Usage:
-  python3 lab/render_usage.py <today_cost_usd> <week_cost_usd>
-  python3 lab/render_usage.py 8.07 74.49
+用法：
+  python3 lab/render_usage.py <五分钟限额百分比> <七天限额百分比>
+  python3 lab/render_usage.py 75 42
 
-Output (stdout):
-  A single-line base64 string of the rendered GIF, suitable for embedding
-  in a TC002 Custom App JSON payload.
+输出（stdout）：
+  单行 base64 编码的 GIF，可直接嵌入 TC002 Custom App JSON payload。
 
-With --file PATH, also writes the GIF to disk.
+加 --file PATH 参数会同时将 GIF 写入磁盘。
 """
 
 import sys
@@ -43,7 +42,7 @@ TINY_FONT = {
     "7": ["111", "001", "010", "010", "010"],
     "8": ["111", "101", "111", "101", "111"],
     "9": ["111", "101", "111", "001", "110"],
-    "D": ["111", "101", "101", "101", "111"],
+    "D": ["111", "101", "101", "101", "110"],
     "H": ["101", "101", "111", "101", "101"],
     "K": ["101", "101", "110", "101", "101"],
     "W": ["10001", "10001", "10101", "11011", "10001"],
@@ -140,37 +139,28 @@ def tiny_text_width(text):
     return max(0, total - 1)
 
 
-def bar_color_for_cost(cost_usd, period):
-    """Return bar color based on daily/weekly cost thresholds."""
-    # Codex Plus ~$200/month ≈ $50/week ≈ $7/day
-    # Green: under budget, Yellow: near budget, Red: over budget
-    if period == "day":
-        if cost_usd >= 12:
-            return BAR_DANGER
-        if cost_usd >= 8:
-            return BAR_WARN
-        return BAR_OK
-    else:  # week
-        if cost_usd >= 80:
-            return BAR_DANGER
-        if cost_usd >= 50:
-            return BAR_WARN
-        return BAR_OK
+def bar_color_for_pct(pct):
+    """根据限额使用率百分比返回进度条颜色。"""
+    if pct >= 90:
+        return BAR_DANGER
+    if pct >= 70:
+        return BAR_WARN
+    return BAR_OK
 
 
-def draw_cost_bar(draw, x, y, width, cost, max_cost, fill):
-    """Draw a usage bar based on cost (USD). Bar fills proportional to cost vs max_cost."""
-    pct = max(0, min(100, int(cost / max_cost * 100)))
+def draw_pct_bar(draw, x, y, width, pct, fill):
+    """绘制基于百分比（0-100）的用量进度条。"""
+    pct = max(0, min(100, int(pct)))
     draw.rectangle((x, y, x + width - 1, y + 1), outline=BAR_FRAME)
     inner_w = max(0, round((width - 2) * pct / 100))
     if inner_w:
         draw.line((x + 1, y, x + inner_w, y), fill=fill)
 
 
-def usage_frame(day_cost, week_cost, pupils=EYE_RIGHT, bob=0):
-    """Draw one animation frame of the usage display.
-    day_cost: today's Codex cost in USD
-    week_cost: this week's Codex cost in USD
+def usage_frame(five_hour_pct, seven_day_pct, pupils=EYE_RIGHT, bob=0):
+    """绘制一帧用量显示动画。
+    five_hour_pct: 5 小时窗口限额使用率（0-100）
+    seven_day_pct: 7 天窗口限额使用率（0-100）
     """
     img = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img)
@@ -178,38 +168,36 @@ def usage_frame(day_cost, week_cost, pupils=EYE_RIGHT, bob=0):
     mascot = draw_frame(pupils, bob=bob, ox=13)
     img.paste(mascot.crop((25, 0, W, H)), (25, 0))
 
-    # Show as "$X" format
-    day_label = f"${day_cost:.0f}"
-    week_label = f"${week_cost:.0f}"
+    five_hour_pct = max(0, min(100, int(five_hour_pct)))
+    seven_day_pct = max(0, min(100, int(seven_day_pct)))
 
-    # Bar max values
-    day_max = max(float(day_cost), 15.0)  # bar full = $15/day
-    week_max = max(float(week_cost), 100.0)  # bar full = $100/week
+    day_label = f"{five_hour_pct}%"
+    week_label = f"{seven_day_pct}%"
 
     draw_tiny_text(img, "5H", 1, 0)
     draw_tiny_text(img, day_label, 24 - tiny_text_width(day_label), 0)
-    draw_cost_bar(draw, 1, 6, 23, day_cost, day_max, bar_color_for_cost(day_cost, "day"))
+    draw_pct_bar(draw, 1, 6, 23, five_hour_pct, bar_color_for_pct(five_hour_pct))
 
-    draw_tiny_text(img, "W", 1, 9)
+    draw_tiny_text(img, "7d", 1, 9)
     draw_tiny_text(img, week_label, 24 - tiny_text_width(week_label), 9)
-    draw_cost_bar(draw, 1, 14, 23, week_cost, week_max, bar_color_for_cost(week_cost, "week"))
+    draw_pct_bar(draw, 1, 14, 23, seven_day_pct, bar_color_for_pct(seven_day_pct))
     return img
 
 
-def render_usage_gif(day_cost, week_cost):
-    """Generate an animated usage GIF and return base64 string.
-    day_cost: today's Codex cost (USD)
-    week_cost: this week's Codex cost (USD)
+def render_usage_gif(five_hour_pct, seven_day_pct):
+    """生成动画用量 GIF 并返回 base64 字符串。
+    five_hour_pct: 5 小时窗口限额使用率（0-100）
+    seven_day_pct: 7 天窗口限额使用率（0-100）
     """
-    day_cost = max(0, float(day_cost))
-    week_cost = max(0, float(week_cost))
+    five_hour_pct = max(0, min(100, int(five_hour_pct)))
+    seven_day_pct = max(0, min(100, int(seven_day_pct)))
 
     frames = [
-        (usage_frame(day_cost, week_cost, EYE_RIGHT, 0), 700),
-        (usage_frame(day_cost, week_cost, EYE_LEFT, 0), 520),
-        (usage_frame(day_cost, week_cost, EYE_NONE, 0), 160),
-        (usage_frame(day_cost, week_cost, EYE_RIGHT, -1), 520),
-        (usage_frame(day_cost, week_cost, EYE_LEFT, 0), 620),
+        (usage_frame(five_hour_pct, seven_day_pct, EYE_RIGHT, 0), 700),
+        (usage_frame(five_hour_pct, seven_day_pct, EYE_LEFT, 0), 520),
+        (usage_frame(five_hour_pct, seven_day_pct, EYE_NONE, 0), 160),
+        (usage_frame(five_hour_pct, seven_day_pct, EYE_RIGHT, -1), 520),
+        (usage_frame(five_hour_pct, seven_day_pct, EYE_LEFT, 0), 620),
     ]
 
     buf = BytesIO()
@@ -237,14 +225,14 @@ def main():
                 file_path = sys.argv[idx + 1]
 
     if len(args) < 2:
-        print("Usage: python3 lab/render_usage.py <today_cost_usd> <week_cost_usd> [--file PATH]",
+        print("Usage: python3 lab/render_usage.py <five_hour_pct> <seven_day_pct> [--file PATH]",
               file=sys.stderr)
         sys.exit(1)
 
-    day_cost = float(args[0])
-    week_cost = float(args[1])
+    five_hour_pct = int(args[0])
+    seven_day_pct = int(args[1])
 
-    b64 = render_usage_gif(day_cost, week_cost)
+    b64 = render_usage_gif(five_hour_pct, seven_day_pct)
     print(b64, end="")
 
     if file_path:

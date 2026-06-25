@@ -1,101 +1,101 @@
-# Local Lab
+# 本地测试工具
 
-This folder contains local testing and real-usage helpers. It is for development and may not need to be included in the final upstream PR unless maintainers want a reproducible lab setup.
+本目录包含本地测试和真实用量接入脚本，用于开发调试。
 
-## Quick start: MQTT chain test
+> **完整安装指南**：见 [docs/QUICKSTART.md](../docs/QUICKSTART.md)
 
-1. Run Mosquitto on the Mac with Homebrew.
-2. Configure TC002 to connect to the Mac LAN IP.
-3. Publish a manual payload with `mosquitto_pub`.
-4. Add Home Assistant after the broker-to-TC002 path works.
+## 真实 Claude Code 用量接入
 
-See `docs/README.md`.
-
-## Real Claude Code usage pipeline
-
-The MQTT Blueprint (`blueprint.yaml`) only provides a **static** demo `usage` image — it proves the display chain works but does not reflect real account quota.
-
-The scripts in this directory complete the pipeline:
+本目录的脚本实现完整的实时限额显示，**只显示真实数据**：
 
 ```text
-ccusage codex daily (read Codex usage logs)
-  → calculate today / week cost (USD)
-  → render a fresh 52x16 Claude Bot usage GIF
-  → publish JSON payload to TC002 Custom App MQTT topic
+Claude Code statusLine hook
+  → claude_statusline_bridge.js（接收 stdin JSON，提取限额百分比）
+  → render_usage.py（渲染 52x16 限额用量 GIF）
+  → mosquitto_pub（MQTT 发布到 TC002）
 ```
 
-### publish_usage.sh — one-shot or loop
+### 快速测试
 
 ```bash
 cd apps/mqtt/claude-bot
 
-# One shot:
-TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh
+# 从状态文件读取并发布：
+TC002_MQTT_HOST=<你的broker地址> bash lab/publish_usage.sh
 
-# Loop every 300 seconds:
-TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh --loop 300
+# 渲染 GIF 到磁盘：
+python3 lab/render_usage.py 50 30 --file /tmp/claude_bot_usage.gif
 ```
 
-Environment variables:
+### 实时模式（statusLine hook）
 
-| Variable | Required | Default | Description |
+1. 配置 Claude Code statusLine hook（详见 `docs/USAGE_INTEGRATION.md`）：
+
+   ```json
+   {
+     "statusLine": {
+       "type": "command",
+       "command": "node /path/to/lab/claude_statusline_bridge.js"
+     }
+   }
+   ```
+
+2. bridge 脚本在每次 Claude Code 响应后自动运行：
+   - 从 stdin 提取 `rate_limits.five_hour.used_percentage` 和 `seven_day.used_percentage`
+   - 将状态写入 `/tmp/claude-statusline-state.json`
+   - 渲染 52x16 GIF 并通过 MQTT 发布到 TC002
+
+3. 轮询模式（每 300 秒读取一次状态文件）：
+
+   ```bash
+   bash lab/publish_usage.sh --loop 300
+   ```
+
+### 环境变量
+
+| 变量 | 必填 | 默认值 | 说明 |
 |---|---|---|---|
-| `TC002_MQTT_HOST` | no | `127.0.0.1` | MQTT broker host |
-| `TC002_MQTT_PORT` | no | `1883` | MQTT broker port |
-| `TC002_MQTT_TOPIC` | no | `ulanzi_1bf6/custom/claude_bot` | Custom App topic |
-| `TC002_DURATION` | no | `3600` | Display duration in seconds |
-| `TC002_TIMEZONE` | no | `Asia/Shanghai` | Timezone for ccusage |
+| `TC002_MQTT_HOST` | 否 | `127.0.0.1` | MQTT broker 地址 |
+| `TC002_MQTT_PORT` | 否 | `1883` | MQTT broker 端口 |
+| `TC002_MQTT_TOPIC` | 否 | `ulanzi_1bf6/custom/claude_bot` | Custom App topic |
+| `TC002_DURATION` | 否 | `31536000` | 显示时长（秒），默认一年，保持常亮 |
+| `TC002_STATE_FILE` | 否 | `/tmp/claude-statusline-state.json` | 状态文件路径 |
 
-### Pipeline steps
+### 流程说明
 
-| Step | Script | What it does |
+| 步骤 | 脚本 | 功能 |
 |---|---|---|
-| 1. Read usage | `claude_usage_snapshot.js` | Runs `ccusage codex daily --json`, outputs JSON with today/week cost (USD) and actual token counts |
-| 2. Render GIF | `render_usage.py` | Takes two costs (USD), generates a 52×16 animated usage GIF with mascot eye animation, outputs base64 |
-| 3. Publish MQTT | `mosquitto_pub` (in `publish_usage.sh`) | Wraps the base64 GIF in a TC002 Custom App JSON payload and publishes to the MQTT topic |
+| 1. Hook | `claude_statusline_bridge.js` | 接收 Claude Code statusLine JSON，提取限额百分比，写入状态文件，渲染 GIF，发布 MQTT |
+| 1a. 渲染 | `render_usage.py` | 接收两个百分比（0-100），生成 52×16 动画 GIF，输出 base64 |
+| 1b. 发布 | `mosquitto_pub` | 将 base64 GIF 包装成 TC002 Custom App JSON payload，发布到 MQTT topic |
+| 2. 状态 | `/tmp/claude-statusline-state.json` | bridge 写入限额数据；publish_usage.sh 可从中读取 |
 
-### Usage bar color coding
+### 用量条颜色编码
 
-| Cost | Color | Meaning |
+| 百分比 | 颜色 | 含义 |
 |---|---|---|
-| < $8 (day) / < $50 (week) | Green | OK |
-| $8–12 (day) / $50–80 (week) | Yellow | Warning |
-| > $12 (day) / > $80 (week) | Red | Danger |
+| < 70% | 绿色 | 正常 |
+| 70–90% | 黄色 | 注意 |
+| > 90% | 红色 | 危险 |
 
-Thresholds are based on Codex Plus ($200/month ≈ $7/day, $50/week).
-
-### render_usage.py — standalone renderer
+### render_usage.py — 独立渲染器
 
 ```bash
-# Print base64 to stdout:
-python3 lab/render_usage.py 8 74
+# 输出 base64 到 stdout：
+python3 lab/render_usage.py 50 30
 
-# Also write GIF to disk:
-python3 lab/render_usage.py 8 74 --file /tmp/claude_bot_usage.gif
+# 同时写入 GIF 文件：
+python3 lab/render_usage.py 50 30 --file /tmp/claude_bot_usage.gif
 ```
 
-Requires Python 3 with Pillow (`pip install pillow`).
+需要 Python 3 + Pillow（`pip install pillow`）。
 
-### claude_usage_snapshot.js — standalone usage reader
+### 旧版脚本（已弃用）
 
-```bash
-cd apps/mqtt/claude-bot
-node lab/claude_usage_snapshot.js
-```
+`claude_usage_snapshot.js` 是旧版脚本，通过 `ccusage` 读取 Codex 历史花费。已被 statusLine bridge 取代。
 
-No environment variables required. The output includes:
+## 为什么用多个脚本
 
-| Field | Meaning |
-|---|---|
-| `today.costUSD` | Today's Codex cost in USD |
-| `week.costUSD` | This week's Codex cost in USD |
-| `today.actualTokens` | Non-cache tokens used today |
-| `week.actualTokens` | Non-cache tokens used this week |
-
-Costs are calculated by ccusage using per-model API pricing. Cache-read tokens are excluded.
-
-## Why three separate scripts instead of one monolith
-
-- `claude_usage_snapshot.js` — JSON output, reusable by other tooling
-- `render_usage.py` — pure renderer, reusable by WebUI / other publishers
-- `publish_usage.sh` — thin orchestrator, easy to cron or hook into Codex lifecycle
+- `claude_statusline_bridge.js` — Claude Code hook，读取 stdin，写入状态文件 + 发布 MQTT
+- `render_usage.py` — 纯渲染器，可被其他工具复用
+- `publish_usage.sh` — 轻量编排器，从状态文件读取并发布到 MQTT

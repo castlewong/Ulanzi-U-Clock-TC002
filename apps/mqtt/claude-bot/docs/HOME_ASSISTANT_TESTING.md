@@ -1,25 +1,16 @@
-# TC002 Claude Bot — Home Assistant 与 MQTT 真机测试指南
+# TC002 Claude Bot — 真机测试指南
 
-本文说明如何在真实 TC002 设备上测试 `claude-bot`。
-
-当前测试分两层：
-
-| 层级 | 目标 |
-|---|---|
-| Blueprint 测试 | 验证 `loop` / `usage` 两个状态能通过 Home Assistant 和 MQTT 显示到 TC002 |
-| 真实用量测试 | 验证本地脚本能拿到 Claude Code 用量、重新渲染画面并发布到 TC002 |
-
-截至当前版本，Blueprint 自带的 `usage` 是静态 demo 图，不会自动读取 Claude Code 真实用量。
+本文说明如何在真实 TC002（U-Clock）设备上测试 `claude-bot`，验证真实 Claude Code 限额显示。
 
 ## 1. 基本概念
 
 ```text
-Home Assistant -> MQTT broker -> TC002
+Claude Code → statusLine hook → MQTT broker → TC002
 ```
 
 ## 2. MQTT broker
 
-推荐使用 Home Assistant Add-on 里的 Mosquitto broker。
+需要一个 TC002 和你的电脑都能访问的 MQTT broker。
 
 Mac 本地测试：
 
@@ -33,7 +24,7 @@ brew services start mosquitto
 在 TC002 的 MQTT 设置里填写：
 
 ```text
-Broker host: <Mac 局域网 IP>
+Broker host: <broker IP>
 Broker port: 1883
 MQTT prefix: ulanzi
 ```
@@ -58,70 +49,65 @@ curl http://<TC002_IP>/getMqttConfig
 ulanzi_1bf6/custom/claude_bot
 ```
 
-## 5. 手动测试 MQTT
+## 5. 测试 MQTT 连接
 
 ```bash
-# 测试 loop 动画
-mosquitto_pub -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot -m '{"duration":3600,"text":[],"image":[{"data":"data:image/gif;base64,<BASE64>","position":[0,0]}],"draw":[]}'
-
-# 测试 usage 画面
-mosquitto_pub -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot -m '{"duration":3600,"text":[],"image":[{"data":"data:image/gif;base64,<BASE64>","position":[0,0]}],"draw":[]}'
+# 测试屏幕变绿（验证连接）
+mosquitto_pub -h <BROKER_IP> -t ulanzi_1bf6/custom/claude_bot \
+  -m '{"duration":31536000,"text":[],"image":[],"draw":[{"df":[0,0,52,16,"#00FF00"]}]}'
 ```
 
-## 6. 导入 Blueprint
+## 6. 配置 statusLine hook
 
-1. 在 Home Assistant 中导入 `blueprint.yaml`
-2. 创建 `input_select` helper，选项：`loop`、`usage`
-3. 用 Blueprint 创建自动化
-4. 设置 `TC002 Custom App MQTT topic` 为你的设备 topic
+1. 在 `~/.claude/settings.json` 中添加：
 
-## 7. 状态映射
+   ```json
+   {
+     "statusLine": {
+       "type": "command",
+       "command": "node /path/to/Ulanzi-U-Clock-TC002/apps/mqtt/claude-bot/lab/claude_statusline_bridge.js"
+     }
+   }
+   ```
 
-| 状态值 | 显示效果 |
-|---|---|
-| `loop` | Claude Bot 循环动画 |
-| `usage` | Claude Bot 用量条（静态 demo） |
+2. 重启 Claude Code，发送任意消息后自动触发 hook。
 
-## 8. 真实用量测试
+3. 查看状态文件验证：
 
-真实用量接入现已实现，见 `lab/publish_usage.sh`。
+   ```bash
+   cat /tmp/claude-statusline-state.json
+   ```
 
-### 前提
-
-- TC002 和 MQTT broker 在同一局域网
-- `python3` 已安装 Pillow（`pip install pillow`）
-- `npx ccusage` 可用
-
-### 快速测试
+## 7. 测试真实用量显示
 
 ```bash
 cd apps/mqtt/claude-bot
 
-TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh
+# 从状态文件读取并发布：
+TC002_MQTT_HOST=<broker IP> bash lab/publish_usage.sh
 ```
 
-### 分步调试
+TC002 应该显示 Claude Bot + 5H:XX% / 7d:XX%（真实限额数据）。
+
+## 8. 分步调试
 
 ```bash
-# 1. 查看用量快照（不发布）
-node lab/claude_usage_snapshot.js
+# 1. 手动渲染（不发布）
+python3 lab/render_usage.py 50 30 --file /tmp/claude_bot_usage.gif
 
-# 2. 手动渲染（不读用量，不发布）
-python3 lab/render_usage.py 8 74 --file /tmp/claude_bot_usage.gif
-
-# 3. 用渲染出的 base64 手动发布
-python3 lab/render_usage.py 8 74 | xargs -I{} mosquitto_pub \
-  -h 127.0.0.1 -t ulanzi_1bf6/custom/claude_bot \
-  -m '{"duration":3600,"text":[],"image":[{"data":"data:image/gif;base64,{}","position":[0,0]}],"draw":[]}'
+# 2. 用渲染出的 base64 手动发布
+python3 lab/render_usage.py 50 30 | xargs -I{} mosquitto_pub \
+  -h <BROKER_IP> -t ulanzi_1bf6/custom/claude_bot \
+  -m '{"duration":31536000,"text":[],"image":[{"data":"data:image/gif;base64,{}","position":[0,0]}],"draw":[]}'
 ```
 
-### 轮询模式
+## 9. 轮询模式
 
 ```bash
-TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh --loop 300
+TC002_MQTT_HOST=<broker IP> bash lab/publish_usage.sh --loop 300
 ```
 
-## 9. 排障
+## 10. 排障
 
 ### MQTT 发布成功但 TC002 不变化
 
@@ -129,7 +115,7 @@ TC002_MQTT_HOST=10.19.1.58 bash lab/publish_usage.sh --loop 300
 - 确认 topic 前缀匹配设备 MAC 后四位
 - 手动在 TC002 上切换到目标 Custom App
 
-### broker 本地正常但 TC002 收不到
+### broker 正常但 TC002 收不到
 
 - 检查 macOS 防火墙
 - 检查路由器 AP 隔离
